@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Caoba Quintas — Lotes en Costa Rica</title>
+<meta name="description" content="Lotes listos para construir en Costa Rica. Financiamiento directo. Visitas guiadas los fines de semana. Desde ₡18 millones.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+/* ── TOKENS ─────────────────────────────────────────────── */
+:root {
+  --caoba-900:#3D2418; --caoba-700:#6B3D28; --caoba-500:#8B5A3C;
+  --verde-bosque:#2D4A3E; --crema-arena:#F5EFE6; --blanco:#FFFFFF;
+  --gris:#6B6B6B; --cta:#E87D3E; --cta-h:#C96428; --exito:#2F7D4F;
+  --font-d:'Playfair Display',Georgia,serif; --font-b:'Manrope',system-ui,sans-serif;
+  --r:10px;
+  --sh-sm:0 1px 4px rgba(61,36,24,.08); --sh-md:0 4px 18px rgba(61,36,24,.12); --sh-lg:0 8px 32px rgba(61,36,24,.18);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-b);background:var(--crema-arena);color:var(--caoba-900);line-height:1.5;overflow-x:hidden}
+
+/* Topo background */
+body{background-color:var(--crema-arena);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='600'%3E%3Cpath d='M0 300 Q150 260 300 300 T600 295' fill='none' stroke='%238B5A3C' stroke-width='1.2' opacity='0.06'/%3E%3Cpath d='M0 330 Q150 290 300 330 T600 325' fill='none' stroke='%238B5A3C' stroke-width='1' opacity='0.045'/%3E%3Cpath d='M0 270 Q150 230 300 270 T600 265' fill='none' stroke='%238B5A3C' stroke-width='1' opacity='0.045'/%3E%3Cpath d='M0 240 Q150 200 300 240 T600 235' fill='none' stroke='%238B5A3C' stroke-width='1' opacity='0.03'/%3E%3Cpath d='M0 360 Q150 320 300 360 T600 355' fill='none' stroke='%238B5A3C' stroke-width='1' opacity='0.03'/%3E%3Cpath d='M0 210 Q150 170 300 210 T600 205' fill='none' stroke='%238B5A3C' stroke-width='0.8' opacity='0.02'/%3E%3C/svg%3E")}
+
+/* Buttons */
+.btn-p{background:var(--cta);color:#fff;font-family:var(--font-b);font-weight:700;font-size:15px;letter-spacing:.02em;padding:0 28px;height:56px;border:none;border-radius:var(--r);cursor:pointer;display:inline-flex;align-items:center;gap:8px;box-shadow:0 2px 10px rgba(232,125,62,.32);transition:background .18s,box-shadow .18s,transform .15s;white-space:nowrap;text-decoration:none}
+.btn-p:hover{background:var(--cta-h);box-shadow:0 4px 18px rgba(232,125,62,.44);transform:translateY(-1px)}
+.btn-p:hover .arr{transform:translateX(4px)}
+.arr{display:inline-block;transition:transform .18s}
+.btn-s{background:transparent;color:var(--caoba-700);font-family:var(--font-b);font-weight:600;font-size:14px;padding:0 20px;height:44px;border:1.5px solid var(--caoba-700);border-radius:var(--r);cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:background .15s,color .15s;text-decoration:none}
+.btn-s:hover{background:var(--caoba-700);color:#fff}
+.btn-wa{background:#25D366;color:#fff;font-family:var(--font-b);font-weight:600;font-size:14px;padding:0 20px;height:44px;border:none;border-radius:var(--r);cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:background .15s,transform .15s;text-decoration:none}
+.btn-wa:hover{background:#1da851;transform:translateY(-1px)}
+
+/* Focus */
+:focus-visible{outline:2px solid var(--cta);outline-offset:3px}
+
+/* Animations */
+.fade-in{opacity:0;transform:translateY(20px);transition:opacity .4s ease-out,transform .4s ease-out}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+@media(prefers-reduced-motion:reduce){.fade-in{opacity:1;transform:none;transition:none}*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+/* Skeleton */
+@keyframes shimmer{0%{background-position:-400px 0}100%{background-position:400px 0}}
+.skel{background:linear-gradient(90deg,#ede7dd 25%,#f5efe6 50%,#ede7dd 75%);background-size:800px 100%;animation:shimmer 1.4s infinite}
+
+/* WhatsApp float */
+.wa-float{position:fixed;bottom:96px;right:20px;z-index:800;width:56px;height:56px;background:#25D366;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(37,211,102,.4);cursor:pointer;transition:transform .2s,box-shadow .2s;border:none;text-decoration:none;animation:waPulse 10s infinite}
+.wa-float:hover{transform:scale(1.1);box-shadow:0 6px 24px rgba(37,211,102,.55)}
+@media(max-width:768px){.wa-float{bottom:80px}}
+@keyframes waPulse{0%,82%,100%{box-shadow:0 4px 16px rgba(37,211,102,.4)}88%{box-shadow:0 4px 16px rgba(37,211,102,.4),0 0 0 10px rgba(37,211,102,.13)}93%{box-shadow:0 4px 16px rgba(37,211,102,.4),0 0 0 18px rgba(37,211,102,.04)}}
+
+/* Sticky mobile CTA */
+.mob-bar{display:none;position:fixed;bottom:0;left:0;right:0;z-index:900;background:var(--blanco);border-top:1px solid rgba(61,36,24,.1);padding:10px 16px;box-shadow:0 -4px 16px rgba(0,0,0,.1);gap:8px}
+@media(max-width:768px){.mob-bar{display:flex}body{padding-bottom:74px}.mob-bar .btn-p{flex:1;justify-content:center;height:52px;font-size:14px}.mob-bar .wa-icon{width:52px;height:52px;background:#25D366;border:none;border-radius:var(--r);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;text-decoration:none}}
+
+/* Back to top */
+.btt{position:fixed;bottom:96px;right:84px;z-index:800;width:44px;height:44px;background:var(--blanco);border:1.5px solid rgba(61,36,24,.15);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:var(--sh-md);transition:opacity .3s,transform .3s,box-shadow .2s;color:var(--caoba-700)}
+.btt.hidden{opacity:0;pointer-events:none;transform:translateY(8px)}
+.btt:hover{box-shadow:var(--sh-lg);transform:translateY(-2px)}
+@media(max-width:768px){.btt{bottom:80px;right:80px;width:40px;height:40px}}
+
+/* Mobile drawer */
+.mob-drawer{position:fixed;inset:0;z-index:999;pointer-events:none}
+.mob-drawer.open{pointer-events:all}
+.mob-drawer-overlay{position:absolute;inset:0;background:rgba(0,0,0,.4);opacity:0;transition:opacity .3s}
+.mob-drawer.open .mob-drawer-overlay{opacity:1}
+.mob-drawer-panel{position:absolute;top:0;right:0;bottom:0;width:min(300px,85vw);background:var(--crema-arena);transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);box-shadow:var(--sh-lg);display:flex;flex-direction:column;padding:24px}
+.mob-drawer.open .mob-drawer-panel{transform:translateX(0)}
+
+/* Mobile filter bottom-sheet */
+.filter-sheet{position:fixed;inset:0;z-index:950;pointer-events:none}
+.filter-sheet.open{pointer-events:all}
+.filter-sheet-overlay{position:absolute;inset:0;background:rgba(0,0,0,.4);opacity:0;transition:opacity .3s}
+.filter-sheet.open .filter-sheet-overlay{opacity:1}
+.filter-sheet-panel{position:absolute;bottom:0;left:0;right:0;background:var(--blanco);border-radius:20px 20px 0 0;transform:translateY(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);padding:0 20px 32px;box-shadow:var(--sh-lg)}
+.filter-sheet.open .filter-sheet-panel{transform:translateY(0)}
+
+/* Success checkmark */
+@keyframes checkDraw{0%{stroke-dashoffset:48}100%{stroke-dashoffset:0}}
+@keyframes circlePop{0%{transform:scale(.6);opacity:0}70%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
+.success-check{animation:circlePop .4s ease-out forwards}
+.check-path{stroke-dasharray:48;stroke-dashoffset:48;animation:checkDraw .5s .3s ease-out forwards}
+
+/* Input styles */
+.inp{width:100%;height:48px;border-radius:var(--r);border:1.5px solid rgba(61,36,24,.2);padding:0 14px;font-size:14px;font-family:var(--font-b);background:var(--blanco);color:var(--caoba-900);outline:none;transition:border-color .15s}
+.inp:focus{border-color:var(--caoba-700)}
+.inp.err{border-color:#c0392b}
+label.lbl{display:block;font-size:12px;font-weight:600;color:var(--caoba-700);margin-bottom:4px}
+.err-msg{font-size:11px;color:#c0392b;margin-top:3px}
+
+/* Section */
+section{padding:80px 0}
+@media(max-width:768px){section{padding:56px 0}}
+.container{max-width:1200px;margin:0 auto;padding:0 24px}
+@media(max-width:768px){.container{padding:0 16px}}
+.eyebrow{font-family:var(--font-b);font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--verde-bosque)}
+.price-tag{font-family:var(--font-d);font-size:22px;font-weight:700;color:var(--caoba-900);font-feature-settings:"tnum";line-height:1.1}
+.tnum{font-feature-settings:"tnum"}
+
+/* Card hover */
+.lot-card{border-radius:14px;overflow:hidden;background:var(--blanco);border:1.5px solid rgba(61,36,24,.09);box-shadow:var(--sh-sm);transition:box-shadow .25s,transform .25s}
+.lot-card:hover{box-shadow:var(--sh-lg);transform:translateY(-4px)}
+.lot-card:hover .card-img{transform:scale(1.05)}
+.card-img{transition:transform .4s ease;width:100%;height:100%;display:flex;align-items:center;justify-content:center}
+
+/* FAQ */
+.faq-item{border:1.5px solid rgba(61,36,24,.1);border-radius:12px;overflow:hidden;margin-bottom:8px;transition:box-shadow .2s}
+.faq-item.open{box-shadow:var(--sh-md)}
+.faq-btn{width:100%;padding:18px 20px;display:flex;justify-content:space-between;align-items:center;background:var(--blanco);border:none;cursor:pointer;text-align:left;gap:12px;transition:background .15s}
+.faq-item.open .faq-btn{background:var(--crema-arena)}
+.faq-body{background:var(--crema-arena);padding:0 20px;max-height:0;overflow:hidden;transition:max-height .3s ease,padding .3s ease}
+.faq-item.open .faq-body{max-height:400px;padding:4px 20px 18px}
+.faq-chev{transition:transform .25s;color:var(--caoba-700);flex-shrink:0}
+.faq-item.open .faq-chev{transform:rotate(180deg)}
+
+/* Stats */
+.stat-num{font-family:var(--font-d);font-size:52px;font-weight:700;color:var(--verde-bosque);line-height:1}
+@media(max-width:768px){.stat-num{font-size:40px}}
+
+/* Link terciario */
+a.link-t{color:var(--caoba-700);font-weight:600;font-size:13px;text-decoration:none;display:inline-flex;align-items:center;gap:4px}
+a.link-t:hover{text-decoration:underline}
+a.link-wa{color:#25D366;font-weight:600;text-decoration:none}
+a.link-wa:hover{text-decoration:underline}
+
+/* Grid responsivo */
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.grid-60-40{display:grid;grid-template-columns:3fr 2fr;gap:48px;align-items:center}
+.grid-50{display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:center}
+@media(max-width:960px){.grid-3{grid-template-columns:1fr 1fr}.grid-60-40{grid-template-columns:1fr;gap:32px}.grid-50{grid-template-columns:1fr}}
+@media(max-width:600px){.grid-3{grid-template-columns:1fr}.grid-2{grid-template-columns:1fr}nav.desk-nav{display:none!important}.desk-ctas{display:none!important}}
+</style>
+</head>
+<body>
+<template id="__bundler_thumbnail" data-bg-color="#F5EFE6">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <!-- Navbar -->
+    <rect width="1200" height="800" fill="#F5EFE6"/>
+    <rect width="1200" height="72" fill="#F5EFE6" opacity="0.95"/>
+    <rect x="24" y="18" width="36" height="36" rx="8" fill="#6B3D28"/>
+    <text x="42" y="42" text-anchor="middle" fill="white" font-size="20" font-family="serif" font-weight="bold">C</text>
+    <rect x="900" y="24" width="140" height="36" rx="8" fill="#25D366"/>
+    <rect x="1056" y="24" width="140" height="36" rx="8" fill="#E87D3E"/>
+    <!-- Hero area -->
+    <rect x="24" y="100" width="680" height="8" rx="4" fill="#2D4A3E" opacity="0.5"/>
+    <rect x="24" y="124" width="560" height="48" rx="6" fill="#3D2418"/>
+    <rect x="24" y="184" width="460" height="48" rx="6" fill="#3D2418"/>
+    <rect x="24" y="256" width="380" height="20" rx="4" fill="#6B6B6B" opacity="0.6"/>
+    <!-- Form inputs -->
+    <rect x="24" y="296" width="220" height="48" rx="10" fill="white" stroke="#8B5A3C" stroke-width="1.5"/>
+    <rect x="256" y="296" width="220" height="48" rx="10" fill="white" stroke="#8B5A3C" stroke-width="1.5"/>
+    <rect x="488" y="296" width="180" height="48" rx="10" fill="#E87D3E"/>
+    <!-- Trust signals -->
+    <rect x="24" y="364" width="120" height="12" rx="6" fill="#2F7D4F" opacity="0.5"/>
+    <rect x="160" y="364" width="120" height="12" rx="6" fill="#2F7D4F" opacity="0.5"/>
+    <rect x="296" y="364" width="120" height="12" rx="6" fill="#2F7D4F" opacity="0.5"/>
+    <!-- Right carousel -->
+    <rect x="740" y="100" width="436" height="320" rx="16" fill="#2D4A3E"/>
+    <rect x="740" y="376" width="436" height="44" rx="10" fill="rgba(255,255,255,0.95)"/>
+    <!-- Filter bar -->
+    <rect y="460" width="1200" height="60" fill="white"/>
+    <rect x="24" y="474" width="160" height="32" rx="8" fill="#F5EFE6" stroke="#8B5A3C" stroke-width="1"/>
+    <rect x="196" y="474" width="160" height="32" rx="8" fill="#F5EFE6" stroke="#8B5A3C" stroke-width="1"/>
+    <rect x="368" y="474" width="160" height="32" rx="8" fill="#F5EFE6" stroke="#8B5A3C" stroke-width="1"/>
+    <rect x="548" y="474" width="140" height="32" rx="8" fill="#E87D3E"/>
+    <!-- Lot cards -->
+    <rect x="24" y="560" width="366" height="220" rx="14" fill="white" stroke="rgba(61,36,24,0.09)" stroke-width="1.5"/>
+    <rect x="24" y="560" width="366" height="140" rx="14" fill="#2D4A3E"/>
+    <rect x="24" y="686" width="366" height="14" rx="4" fill="#3D2418" opacity="0.7"/>
+    <rect x="414" y="560" width="366" height="220" rx="14" fill="white" stroke="rgba(61,36,24,0.09)" stroke-width="1.5"/>
+    <rect x="414" y="560" width="366" height="140" rx="14" fill="#6B3D28"/>
+    <rect x="414" y="686" width="366" height="14" rx="4" fill="#3D2418" opacity="0.7"/>
+    <rect x="804" y="560" width="366" height="220" rx="14" fill="white" stroke="rgba(61,36,24,0.09)" stroke-width="1.5"/>
+    <rect x="804" y="560" width="366" height="140" rx="14" fill="#3D5C45"/>
+    <rect x="804" y="686" width="366" height="14" rx="4" fill="#3D2418" opacity="0.7"/>
+    <!-- WA float -->
+    <circle cx="1156" cy="700" r="28" fill="#25D366"/>
+  </svg>
+</template>
+
+<div id="root"></div>
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel">
+const { useState, useEffect, useRef, useCallback } = React;
+
+/* ── DATA ─────────────────────────────────────────────────────── */
+const LOTS = [
+  { id:1, name:"Lote Cedro",      price:"₡22,500,000", size:"820 m²",   tag:"Disponible", zone:"Sector Norte", features:["Agua potable","Vista montaña","Acceso pavimentado"], bg:"#2D4A3E" },
+  { id:2, name:"Lote Roble",      price:"₡18,000,000", size:"600 m²",   tag:"Disponible", zone:"Sector Sur",   features:["Agua potable","Con árboles","Frente calle"],         bg:"#6B3D28" },
+  { id:3, name:"Lote Guanacaste", price:"₡31,000,000", size:"1,200 m²", tag:"Disponible", zone:"Sector Norte", features:["Agua y luz","Vista panorámica","Cerca de río"],       bg:"#3D5C45" },
+  { id:4, name:"Lote Almendro",   price:"₡19,500,000", size:"700 m²",   tag:"Reservado",  zone:"Sector Este",  features:["Agua potable","Plano","Listo para construir"],         bg:"#8B5A3C" },
+  { id:5, name:"Lote Pochote",    price:"₡25,000,000", size:"950 m²",   tag:"Disponible", zone:"Sector Sur",   features:["Agua y luz","Arbolado","Vista jardín"],               bg:"#4a6545" },
+  { id:6, name:"Lote Nance",      price:"₡21,000,000", size:"750 m²",   tag:"Disponible", zone:"Sector Este",  features:["Agua potable","Esquinero","Privacidad total"],         bg:"#5c3a22" },
+];
+
+const FAQS = [
+  { q:"¿Cómo es el proceso de compra?",    a:"El proceso es sencillo: elegís el lote, separás con un depósito, firmamos promesa de compraventa y escrituramos ante notario. Todo en 30–60 días. Te acompañamos en cada paso.", wa:"Contame más sobre el proceso de compra" },
+  { q:"¿Ofrecen financiamiento directo?",  a:"Sí. Financiamiento directo sin banco: hasta 60 meses plazo, prima desde el 20%. También coordinamos con tu banco o cooperativa.", wa:"Quiero saber sobre el financiamiento" },
+  { q:"¿Puedo construir cuando quiera?",   a:"Sí. Los lotes se entregan con todos los permisos en regla. Podés iniciar construcción cuando lo decidás, sin restricciones de plazo.", wa:"Tengo dudas sobre construcción" },
+  { q:"¿Qué incluye el precio?",           a:"Escritura pública limpia, derecho de aguas, acceso vial interno, y todos los permisos municipales y SETENA al día. Sin costos ocultos.", wa:"Quiero más detalles del precio" },
+  { q:"¿Cómo agendo una visita guiada?",   a:"Llenás el formulario de esta página, nos llamás, o escribís por WhatsApp. Visitas guiadas: sábados y domingos de 9 a.m. a 4 p.m.", wa:"Quiero agendar una visita" },
+];
+
+const POIS = [
+  { icon:"🏥", label:"Hospital más cercano", dist:"10 min" },
+  { icon:"🏪", label:"Supermercado",          dist:"8 min"  },
+  { icon:"🏖️", label:"Playa Dominical",       dist:"25 min" },
+  { icon:"✈️", label:"Aeropuerto Juan Santamaría", dist:"3 h 10 min" },
+  { icon:"🏫", label:"Escuela y colegio",     dist:"5 min"  },
+  { icon:"⛽", label:"Gasolinera",            dist:"3 min"  },
+];
+
+/* ── ICONS ──────────────────────────────────────────────────── */
+const Ic = {
+  Menu:()=><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>,
+  X:()=><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>,
+  Phone:()=><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.22 1.18 2 2 0 012.22 0h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L6.91 7.09a16 16 0 006 6l.86-.86a2 2 0 012.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0122 14.92z"/></svg>,
+  Pin:()=><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>,
+  Area:()=><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>,
+  Heart:({filled})=><svg width="18" height="18" viewBox="0 0 24 24" fill={filled?"var(--caoba-700)":"none"} stroke={filled?"var(--caoba-700)":"currentColor"} strokeWidth="2" strokeLinecap="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>,
+  Check:()=><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--exito)" strokeWidth="2.5" strokeLinecap="round"><polyline points="20 6 9 17 4 12"/></svg>,
+  ChevDown:()=><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><polyline points="6 9 12 15 18 9"/></svg>,
+  ChevUp:()=><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><polyline points="18 15 12 9 6 15"/></svg>,
+  Search:()=><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>,
+  Mountain:()=><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M3 20l6-8 4 5 3-4 5 7H3z"/></svg>,
+  Road:()=><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M5 21v-8l7-10 7 10v8M5 13h14"/></svg>,
+  Shield:()=><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>,
+  Clock:()=><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>,
+  Star:()=><svg width="14" height="14" viewBox="0 0 24 24" fill="#D4A017" stroke="#D4A017" strokeWidth="1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>,
+  Filter:()=><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>,
+  WA:({size=24})=><svg width={size} height={size} viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.999 2C6.478 2 2 6.478 2 12c0 1.854.504 3.593 1.383 5.084L2 22l5.032-1.366A9.95 9.95 0 0012 22c5.522 0 10-4.478 10-10S17.521 2 11.999 2zm0 18a7.96 7.96 0 01-4.079-1.118l-.293-.174-3.044.826.826-3.027-.191-.312A7.957 7.957 0 014 12c0-4.411 3.589-8 8-8 4.41 0 8 3.589 8 8s-3.59 8-8 8z"/></svg>,
+};
+
+/* ── SUCCESS ANIMATION ────────────────────────────────────────── */
+const SuccessAnim = () => (
+  <div style={{display:'flex',flexDirection:'column',alignItems:'center',gap:12,padding:'20px 0'}}>
+    <svg className="success-check" width="64" height="64" viewBox="0 0 64 64">
+      <circle cx="32" cy="32" r="30" fill="rgba(47,125,79,.12)" stroke="var(--exito)" strokeWidth="2.5"/>
+      <path className="check-path" d="M18 33 l10 10 l18-20" fill="none" stroke="var(--exito)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+    <div style={{fontWeight:700,fontSize:16,color:'var(--exito)'}}>¡Recibido! Te contactamos en menos de 24 horas.</div>
+    <p style={{fontSize:14,color:'var(--gris)',textAlign:'center'}}>¿Querés respuesta más rápida? <a href="https://wa.me/50600000000" className="link-wa">Escribinos por WhatsApp →</a></p>
+  </div>
+);
+
+/* ── FORM FIELD ───────────────────────────────────────────────── */
+const Field = ({id, label, type="text", value, onChange, error, placeholder}) => (
+  <div style={{flex:1,minWidth:150}}>
+    <label htmlFor={id} className="lbl">{label}</label>
+    <input id={id} type={type} value={value} onChange={e=>onChange(e.target.value)} placeholder={placeholder}
+      className={`inp${error?' err':''}`} autoComplete={type==='tel'?'tel':'name'}/>
+    {error && <div className="err-msg">{error}</div>}
+  </div>
+);
+
+/* ── HERO CAROUSEL ──────────────────────────────────────────── */
+const HeroCarousel = () => {
+  const [active, setActive] = useState(0);
+  const slides = [
+    {label:"Vista aérea del proyecto",  grad:"linear-gradient(135deg,#2D4A3E 0%,#3D5C45 50%,#4a7a55 100%)"},
+    {label:"Atardecer sobre los lotes", grad:"linear-gradient(135deg,#6B3D28 0%,#8B5A3C 55%,#c4845c 100%)"},
+    {label:"Quinta terminada",          grad:"linear-gradient(135deg,#3D2418 0%,#6B3D28 65%,#8B5A3C 100%)"},
+  ];
+  useEffect(()=>{const t=setInterval(()=>setActive(a=>(a+1)%slides.length),5000);return()=>clearInterval(t)},[]);
+  return (
+    <div style={{borderRadius:16,overflow:'hidden',position:'relative',aspectRatio:'4/3',boxShadow:'var(--sh-lg)'}}>
+      {slides.map((s,i)=>(
+        <div key={i} style={{position:'absolute',inset:0,background:s.grad,opacity:i===active?1:0,transition:'opacity 1.2s ease',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',gap:8}}>
+          <div style={{fontSize:52,opacity:.18}}>🌿</div>
+          <span style={{color:'rgba(255,255,255,.65)',fontSize:12,fontFamily:'var(--font-b)',letterSpacing:'.06em'}}>{s.label}</span>
+        </div>
+      ))}
+      {/* Lote destacado card */}
+      <div style={{position:'absolute',bottom:12,left:12,right:12,background:'rgba(255,255,255,.96)',backdropFilter:'blur(8px)',borderRadius:10,padding:'12px 14px',display:'flex',alignItems:'center',justifyContent:'space-between',boxShadow:'var(--sh-md)'}}>
+        <div>
+          <div style={{fontSize:9,fontWeight:700,letterSpacing:'.12em',color:'var(--verde-bosque)',textTransform:'uppercase',marginBottom:2}}>Lote destacado</div>
+          <div style={{fontFamily:'var(--font-d)',fontWeight:600,fontSize:14,color:'var(--caoba-900)'}}>Lote Cedro — 820 m²</div>
+          <div className="tnum" style={{fontSize:13,color:'var(--caoba-700)',fontWeight:700}}>₡22,500,000</div>
+        </div>
+        <button className="btn-p" style={{height:36,fontSize:12,padding:'0 14px'}} onClick={()=>document.getElementById('lotes')?.scrollIntoView()}>
+          Ver lote <span className="arr">→</span>
+        </button>
+      </div>
+      {/* Dots */}
+      <div style={{position:'absolute',top:12,right:12,display:'flex',gap:5}}>
+        {slides.map((_,i)=>(
+          <button key={i} onClick={()=>setActive(i)} aria-label={`Foto ${i+1}`} style={{width:i===active?20:8,height:8,borderRadius:4,border:'none',background:i===active?'white':'rgba(255,255,255,.4)',cursor:'pointer',transition:'width .3s,background .3s',padding:0}}/>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+/* ── NAVBAR ─────────────────────────────────────────────────── */
+const Navbar = () => {
+  const [scrolled, setScrolled] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  useEffect(()=>{
+    const fn=()=>setScrolled(window.scrollY>20);
+    window.addEventListener('scroll',fn,{passive:true});
+    return()=>window.removeEventListener('scroll',fn);
+  },[]);
+  // Lock body scroll when drawer open
+  useEffect(()=>{ document.body.style.overflow = drawerOpen ? 'hidden' : '' },[drawerOpen]);
+
+  const navLinks = ['Proyecto','Lotes','Ubicación','Contacto'];
+
+  return (
+    <>
+    <header style={{position:'sticky',top:0,zIndex:700,background:scrolled?'rgba(245,239,230,.9)':'var(--crema-arena)',backdropFilter:scrolled?'blur(14px)':'none',borderBottom:scrolled?'1px solid rgba(61,36,24,.1)':'1px solid transparent',transition:'all .3s'}}>
+      <div className="container" style={{display:'flex',alignItems:'center',justifyContent:'space-between',height:72}}>
+        {/* Logo */}
+        <a href="#" style={{textDecoration:'none',display:'flex',alignItems:'center',gap:10}}>
+          <div style={{width:38,height:38,background:'var(--caoba-700)',borderRadius:9,display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 2px 8px rgba(107,61,40,.3)'}}>
+            <span style={{color:'white',fontFamily:'var(--font-d)',fontWeight:700,fontSize:18}}>C</span>
+          </div>
+          <div>
+            <div style={{fontFamily:'var(--font-d)',fontWeight:700,fontSize:17,color:'var(--caoba-900)',lineHeight:1.1}}>Caoba</div>
+            <div style={{fontFamily:'var(--font-b)',fontSize:9,color:'var(--gris)',letterSpacing:'.14em',textTransform:'uppercase'}}>Quintas</div>
+          </div>
+        </a>
+
+        {/* Desktop nav — max 4 items (Hick's Law) */}
+        <nav className="desk-nav" style={{display:'flex',alignItems:'center',gap:32}} aria-label="Principal">
+          {navLinks.map(item=>(
+            <a key={item} href={`#${item.toLowerCase().replace('ó','o')}`}
+              style={{fontFamily:'var(--font-b)',fontWeight:500,fontSize:14,color:'var(--caoba-700)',textDecoration:'none',transition:'color .15s'}}
+              onMouseEnter={e=>e.currentTarget.style.color='var(--caoba-900)'}
+              onMouseLeave={e=>e.currentTarget.style.color='var(--caoba-700)'}
+            >{item}</a>
+          ))}
+        </nav>
+
+        {/* Desktop CTAs */}
+        <div className="desk-ctas" style={{display:'flex',alignItems:'center',gap:10}}>
+          <a href="https://wa.me/50600000000" className="btn-wa" style={{height:40,padding:'0 14px'}} aria-label="WhatsApp">
+            <Ic.WA size={18}/><span style={{fontSize:13}}>WhatsApp</span>
+          </a>
+          <button className="btn-p" style={{height:40,fontSize:14}} onClick={()=>document.getElementById('hero-form')?.scrollIntoView()}>
+            Solicitar información <span className="arr">→</span>
+          </button>
+        </div>
+
+        {/* Mobile right group */}
+        <div style={{display:'none'}} className="mob-right">
+          <a href="tel:+50600000000" aria-label="Llamar" style={{width:40,height:40,display:'flex',alignItems:'center',justifyContent:'center',color:'var(--caoba-700)',textDecoration:'none'}}>
+            <Ic.Phone/>
+          </a>
+          <a href="https://wa.me/50600000000" aria-label="WhatsApp" style={{width:40,height:40,display:'flex',alignItems:'center',justifyContent:'center',background:'#25D366',borderRadius:8,textDecoration:'none'}}>
+            <Ic.WA size={18}/>
+          </a>
+          <button onClick={()=>setDrawerOpen(true)} aria-label="Abrir menú" style={{width:40,height:40,display:'flex',alignItems:'center',justifyContent:'center',background:'none',border:'none',cursor:'pointer',color:'var(--caoba-900)'}}>
+            <Ic.Menu/>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    {/* Mobile drawer */}
+    <div className={`mob-drawer${drawerOpen?' open':''}`} role="dialog" aria-modal="true" aria-label="Menú de navegación">
+      <div className="mob-drawer-overlay" onClick={()=>setDrawerOpen(false)}/>
+      <div className="mob-drawer-panel">
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:32}}>
+          <span style={{fontFamily:'var(--font-d)',fontWeight:700,fontSize:18,color:'var(--caoba-900)'}}>Caoba Quintas</span>
+          <button onClick={()=>setDrawerOpen(false)} aria-label="Cerrar menú" style={{background:'none',border:'none',cursor:'pointer',color:'var(--caoba-700)'}}><Ic.X/></button>
+        </div>
+        <nav style={{display:'flex',flexDirection:'column',gap:4,marginBottom:32}}>
+          {navLinks.map(item=>(
+            <a key={item} href={`#${item.toLowerCase().replace('ó','o')}`}
+              onClick={()=>setDrawerOpen(false)}
+              style={{fontFamily:'var(--font-b)',fontWeight:600,fontSize:17,color:'var(--caoba-900)',textDecoration:'none',padding:'12px 0',borderBottom:'1px solid rgba(61,36,24,.08)'}}>
+              {item}
+            </a>
+          ))}
+        </nav>
+        <button className="btn-p" style={{width:'100%',justifyContent:'center',marginBottom:12}} onClick={()=>{setDrawerOpen(false);document.getElementById('hero-form')?.scrollIntoView()}}>
+          Solicitar información <span className="arr">→</span>
+        </button>
+        <a href="https://wa.me/50600000000" className="btn-wa" style={{width:'100%',justifyContent:'center'}}>
+          <Ic.WA/> WhatsApp
+        </a>
+        <div style={{marginTop:'auto',paddingTop:32,borderTop:'1px solid rgba(61,36,24,.1)',fontSize:13,color:'var(--gris)'}}>
+          <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:6}}><Ic.Phone/> +506 0000-0000</div>
+          <div>info@caobaquintas.com</div>
+        </div>
+      </div>
+    </div>
+
+    <style>{`@media(max-width:600px){.mob-right{display:flex!important;align-items:center;gap:4px}}`}</style>
+    </>
+  );
+};
+
+/* ── HERO ───────────────────────────────────────────────────── */
+const Hero = () => {
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [submitted, setSubmitted] = useState(false);
+  const [errors, setErrors] = useState({});
+
+  const submit = (e) => {
+    e.preventDefault();
+    const errs = {};
+    if (!name.trim()) errs.name = 'Ingresá tu nombre';
+    if (!phone.trim()) errs.phone = 'Ingresá tu teléfono o email';
+    if (Object.keys(errs).length) { setErrors(errs); return; }
+    setSubmitted(true);
+  };
+
+  return (
+    <section id="proyecto" style={{paddingTop:36,paddingBottom:64}}>
+      <div className="container">
+        <div className="grid-60-40">
+          {/* Left — Z-pattern: titular arriba-izq, subtítulo, CTA */}
+          <div>
+            <div className="eyebrow" style={{marginBottom:16}}>Terrenos en Pérez Zeledón, Costa Rica</div>
+            {/* H1: 48px desktop / 32px móvil — según spec */}
+            <h1 style={{fontFamily:'var(--font-d)',fontWeight:700,fontSize:'clamp(32px,4vw,48px)',color:'var(--caoba-900)',lineHeight:1.18,marginBottom:16}}>
+              Lotes listos para construir<br/>
+              <em style={{color:'var(--verde-bosque)',fontStyle:'normal'}}>tu próximo hogar</em>
+            </h1>
+            <p style={{fontSize:17,color:'var(--gris)',marginBottom:28,maxWidth:460,lineHeight:1.65}}>
+              Desde <strong className="tnum" style={{color:'var(--caoba-700)'}}>₡18 millones</strong>. Financiamiento directo. Visitas guiadas los fines de semana.
+            </p>
+
+            {/* Formulario inline — 2 campos máx. (Ley de Hick, Carga cognitiva) */}
+            {!submitted ? (
+              <form id="hero-form" onSubmit={submit} noValidate>
+                <div style={{display:'flex',gap:10,flexWrap:'wrap',marginBottom:8,alignItems:'flex-end'}}>
+                  <Field id="h-name" label="Nombre" value={name} onChange={v=>{setName(v);setErrors(p=>({...p,name:''}))}} error={errors.name} placeholder="Tu nombre completo"/>
+                  <Field id="h-phone" label="Teléfono o email" type="tel" value={phone} onChange={v=>{setPhone(v);setErrors(p=>({...p,phone:''}))}} error={errors.phone} placeholder="8888-0000"/>
+                  <div style={{paddingBottom:errors.name||errors.phone?'18px':0}}>
+                    <button type="submit" className="btn-p">Quiero información <span className="arr">→</span></button>
+                  </div>
+                </div>
+              </form>
+            ) : <SuccessAnim/>}
+
+            {/* Trust signals — prueba social + autoridad (Cialdini) */}
+            <div style={{display:'flex',flexWrap:'wrap',gap:16,marginTop:16}}>
+              {['120+ familias ya compraron','Permisos SETENA al día','Escrituración inmediata'].map(t=>(
+                <div key={t} style={{display:'flex',alignItems:'center',gap:5,fontSize:13,color:'var(--caoba-700)',fontWeight:500}}>
+                  <Ic.Check/>{t}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Right — galería con rotate + card lote del mes (Opción A+C del spec) */}
+          <HeroCarousel/>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+/* ── FILTER BAR ─────────────────────────────────────────────── */
+const FilterBar = () => {
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const [loc, setLoc] = useState('');
+  const [price, setPrice] = useState('');
+  const [size, setSize] = useState('');
+  const sel = {height:44,borderRadius:'var(--r)',border:'1.5px solid rgba(61,36,24,.15)',padding:'0 12px',fontFamily:'var(--font-b)',fontSize:14,background:'var(--blanco)',color:'var(--caoba-900)',cursor:'pointer'};
+
+  return (
+    <>
+    <div style={{background:'var(--blanco)',borderTop:'1px solid rgba(61,36,24,.07)',borderBottom:'1px solid rgba(61,36,24,.07)',boxShadow:'var(--sh-sm)'}}>
+      <div className="container" style={{display:'flex',gap:10,alignItems:'center',padding:'14px 24px',flexWrap:'wrap'}}>
+        {/* Desktop filters — máx 3 (Hick's Law) */}
+        <div className="desk-filters" style={{display:'flex',gap:10,flex:1,flexWrap:'wrap'}}>
+          <select value={loc} onChange={e=>setLoc(e.target.value)} style={sel} aria-label="Filtrar por ubicación">
+            <option value="">Ubicación ▾</option>
+            <option>Sector Norte</option><option>Sector Sur</option><option>Sector Este</option>
+          </select>
+          <select value={price} onChange={e=>setPrice(e.target.value)} style={sel} aria-label="Filtrar por precio">
+            <option value="">Precio ▾</option>
+            <option>Hasta ₡20M</option><option>₡20M – ₡30M</option><option>Más de ₡30M</option>
+          </select>
+          <select value={size} onChange={e=>setSize(e.target.value)} style={sel} aria-label="Filtrar por tamaño">
+            <option value="">Tamaño ▾</option>
+            <option>Menos de 700 m²</option><option>700–1000 m²</option><option>Más de 1000 m²</option>
+          </select>
+        </div>
+        <button className="btn-p" style={{height:44,fontSize:14}} onClick={()=>document.getElementById('lotes')?.scrollIntoView()}>
+          <Ic.Search/> Buscar lotes <span className="arr">→</span>
+        </button>
+        <button className="mob-filter-btn" style={{display:'none',height:44,background:'none',border:'1.5px solid rgba(61,36,24,.15)',borderRadius:'var(--r)',padding:'0 16px',fontFamily:'var(--font-b)',fontSize:14,color:'var(--caoba-700)',cursor:'pointer',alignItems:'center',gap:6}} onClick={()=>setSheetOpen(true)}>
+          <Ic.Filter/> Filtrar
+        </button>
+        <button style={{background:'none',border:'none',fontSize:12,color:'var(--gris)',cursor:'pointer',textDecoration:'underline',padding:'0 4px',whiteSpace:'nowrap'}}>
+          Filtros avanzados
+        </button>
+      </div>
+    </div>
+
+    {/* Mobile filter bottom-sheet — patrón móvil nativo (spec sec 8) */}
+    <div className={`filter-sheet${sheetOpen?' open':''}`} role="dialog" aria-modal="true" aria-label="Filtros de búsqueda">
+      <div className="filter-sheet-overlay" onClick={()=>setSheetOpen(false)}/>
+      <div className="filter-sheet-panel">
+        <div style={{width:40,height:4,background:'rgba(61,36,24,.15)',borderRadius:2,margin:'12px auto 20px'}}/>
+        <h3 style={{fontFamily:'var(--font-d)',fontSize:20,fontWeight:700,color:'var(--caoba-900)',marginBottom:20}}>Filtrar lotes</h3>
+        {[['Ubicación',['Sector Norte','Sector Sur','Sector Este'],loc,setLoc],
+          ['Precio',['Hasta ₡20M','₡20M – ₡30M','Más de ₡30M'],price,setPrice],
+          ['Tamaño',['Menos de 700 m²','700–1000 m²','Más de 1000 m²'],size,setSize]
+        ].map(([label,opts,val,set])=>(
+          <div key={label} style={{marginBottom:16}}>
+            <div style={{fontSize:12,fontWeight:700,color:'var(--caoba-700)',marginBottom:8,letterSpacing:'.05em',textTransform:'uppercase'}}>{label}</div>
+            <div style={{display:'flex',flexWrap:'wrap',gap:8}}>
+              {opts.map(o=>(
+                <button key={o} onClick={()=>set(val===o?'':o)}
+                  style={{padding:'8px 16px',borderRadius:20,border:`1.5px solid ${val===o?'var(--verde-bosque)':'rgba(61,36,24,.15)'}`,background:val===o?'var(--verde-bosque)':'transparent',color:val===o?'white':'var(--caoba-700)',fontFamily:'var(--font-b)',fontSize:13,fontWeight:600,cursor:'pointer',transition:'all .15s'}}>
+                  {o}
+                </button>
+              ))}
+            </div>
+          </div>
+        ))}
+        <button className="btn-p" style={{width:'100%',justifyContent:'center',marginTop:8}} onClick={()=>{setSheetOpen(false);document.getElementById('lotes')?.scrollIntoView()}}>
+          Ver lotes <span className="arr">→</span>
+        </button>
+      </div>
+    </div>
+    <style>{`@media(max-width:600px){.desk-filters{display:none!important}.mob-filter-btn{display:flex!important}}`}</style>
+    </>
+  );
+};
+
+/* ── BENEFITS ───────────────────────────────────────────────── */
+const Benefits = () => {
+  const items = [
+    {icon:<Ic.Mountain/>, title:"Naturaleza auténtica", desc:"Rodeado de bosque tropical. Vista a cerros y quebradas. El silencio que la ciudad no puede dar."},
+    {icon:<Ic.Road/>,     title:"Acceso garantizado",   desc:"Calle de acceso pavimentada. A 15 minutos del centro. Ruta hacia la playa sin complicaciones."},
+    {icon:<Ic.Shield/>,   title:"100% legal y seguro",  desc:"Escritura pública, planos catastrados, permisos SETENA y municipales al día. Sin sorpresas."},
+  ];
+  return (
+    <section id="beneficios" style={{background:'var(--blanco)'}}>
+      <div className="container">
+        <div className="eyebrow" style={{textAlign:'center',marginBottom:12}}>¿Por qué elegirnos?</div>
+        <h2 style={{fontFamily:'var(--font-d)',fontWeight:700,fontSize:'clamp(26px,3vw,36px)',textAlign:'center',color:'var(--caoba-900)',marginBottom:48,lineHeight:1.2}}>
+          Caoba Quintas, diferente por diseño
+        </h2>
+        {/* 3 columnas — Regla del 3 (Miller, 1956) */}
+        <div className="grid-3">
+          {items.map((it,i)=>(
+            <div key={i} className="fade-in" style={{padding:'30px 26px',borderRadius:14,border:'1.5px solid rgba(61,36,24,.09)',background:'var(--crema-arena)',textAlign:'center'}}>
+              <div style={{color:'var(--verde-bosque)',marginBottom:14,display:'flex',justifyContent:'center'}}>{it.icon}</div>
+              <h3 style={{fontFamily:'var(--font-d)',fontWeight:600,fontSize:20,color:'var(--caoba-900)',marginBottom:10,lineHeight:1.2}}>{it.title}</h3>
+              <p style={{fontSize:14,color:'var(--gris)',lineHeight:1.7}}>{it.desc}</p>
+            </div>
+          ))}
+        </div>
+        {/* CTA después de beneficios — repetición #3 */}
+        <div style={{textAlign:'center',marginTop:40}}>
+          <button className="btn-p" onClick={()=>document.getElementById('lotes')?.scrollIntoView()}>
+            Ver lotes disponibles <span className="arr">→</span>
+          </button>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+/* ── SKELETON ───────────────────────────────────────────────── */
+const LotSkeleton = () => (
+  <div style={{borderRadius:14,overflow:'hidden',border:'1.5px solid rgba(61,36,24,.09)'}}>
+    <div className="skel" style={{height:200}}/>
+    <div style={{padding:'16px 18px',display:'flex',flexDirection:'column',gap:10}}>
+      <div className="skel" style={{height:20,borderRadius:4,width:'60%'}}/>
+      <div className="skel" style={{height:14,borderRadius:4,width:'40%'}}/>
+      <div style={{display:'flex',gap:8}}>
+        <div className="skel" style={{height:30,flex:1,borderRadius:20}}/>
+        <div className="skel" style={{height:30,width:60,borderRadius:20}}/>
+      </div>
+      <div className="skel" style={{height:40,borderRadius:'var(--r)'}}/>
+    </div>
+  </div>
+);
+
+/* ── LOT CARD ───────────────────────────────────────────────── */
+const LotCard = ({lot}) => {
+  const [fav, setFav] = useState(false);
+  return (
+    <div className="lot-card">
+      {/* Imagen — aspect 4:3 */}
+      <div style={{position:'relative',aspectRatio:'4/3',background:lot.bg,overflow:'hidden'}}>
+        <div className="card-img"><div style={{fontSize:36,opacity:.16}}>🌿</div></div>
+        {/* Badge disponibilidad — esquina sup-izq (Gestalt proximidad) */}
+        <div style={{position:'absolute',top:10,left:10,background:lot.tag==='Disponible'?'var(--exito)':'#D4A017',color:'white',fontSize:11,fontWeight:700,padding:'3px 10px',borderRadius:20,letterSpacing:'.05em'}}>
+          {lot.tag}
+        </div>
+        {/* Favorito — microcompromiso Cialdini. Color: caoba-700, NO cta-primario (Von Restorff) */}
+        <button onClick={()=>setFav(f=>!f)} aria-label={fav?'Quitar favorito':'Agregar a favoritos'}
+          style={{position:'absolute',top:8,right:8,background:'rgba(255,255,255,.92)',border:'none',borderRadius:'50%',width:34,height:34,display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',transition:'transform .15s'}}
+          onMouseEnter={e=>e.currentTarget.style.transform='scale(1.12)'}
+          onMouseLeave={e=>e.currentTarget.style.transform='scale(1)'}
+        ><Ic.Heart filled={fav}/></button>
+      </div>
+      {/* Jerarquía: precio > ubicación > specs */}
+      <div style={{padding:'16px 18px'}}>
+        <div className="price-tag" style={{marginBottom:4}}>{lot.price}</div>
+        <div style={{display:'flex',alignItems:'center',gap:4,fontSize:13,color:'var(--gris)',marginBottom:10}}>
+          <Ic.Pin/>{lot.zone} — {lot.name}
+        </div>
+        <div style={{display:'flex',gap:8,flexWrap:'wrap',marginBottom:14}}>
+          <span style={{display:'flex',alignItems:'center',gap:3,fontSize:12,color:'var(--caoba-700)',fontWeight:500}}><Ic.Area/>{lot.size}</span>
+          {lot.features.slice(0,2).map(f=>(
+            <span key={f} style={{fontSize:11,color:'var(--caoba-500)',background:'rgba(139,90,60,.08)',padding:'2px 8px',borderRadius:20}}>{f}</span>
+          ))}
+        </div>
+        <div style={{display:'flex',gap:8,borderTop:'1px solid rgba(61,36,24,.07)',paddingTop:12}}>
+          <button className="btn-s" style={{flex:1,justifyContent:'center',height:40,fontSize:13}}>Ver detalles <span className="arr">→</span></button>
+          <a href="https://wa.me/50600000000" className="btn-wa" style={{width:40,height:40,padding:0,justifyContent:'center',borderRadius:8,flexShrink:0}} aria-label="Consultar por WhatsApp"><Ic.WA size={18}/></a>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+/* ── LOTS SECTION ───────────────────────────────────────────── */
+const LotsSection = () => {
+  const [loading, setLoading] = useState(true);
+  const [shown, setShown] = useState(3);
+  const avail = LOTS.filter(l=>l.tag==='Disponible').length;
+
+  useEffect(()=>{const t=setTimeout(()=>setLoading(false),900);return()=>clearTimeout(t)},[]);
+
+  return (
+    <section id="lotes">
+      <div className="container">
+        <div className="eyebrow" style={{marginBottom:12}}>Lotes disponibles</div>
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-end',marginBottom:32,flexWrap:'wrap',gap:12}}>
+          <h2 style={{fontFamily:'var(--font-d)',fontWeight:700,fontSize:'clamp(26px,3vw,36px)',color:'var(--caoba-900)',lineHeight:1.2}}>
+            Encontrá tu terreno ideal
+          </h2>
+          {/* Escasez — Cialdini: dato real visible */}
+          <span style={{fontSize:14,color:'var(--gris)',background:'rgba(47,125,79,.08)',border:'1px solid rgba(47,125,79,.2)',borderRadius:20,padding:'4px 12px',fontWeight:600,color:'var(--exito)'}}>
+            {avail} de {LOTS.length} lotes disponibles
+          </span>
+        </div>
+        {/* Skeletons mientras carga (spec sec 7) */}
+        <div className="grid-3">
+          {loading
+            ? [1,2,3].map(i=><LotSkeleton key={i}/>)
+            : LOTS.slice(0,shown).map(lot=><LotCard key={lot.id} lot={lot}/>)
+          }
+        </div>
+        {/* "Cargar más" — NO scroll infinito (spec sec 5.5) */}
+        {!loading && shown < LOTS.length && (
+          <div style={{textAlign:'center',marginTop:36}}>
+            <button className="btn-s" style={{height:48,fontSize:14}} onClick={()=>setShown(s=>Math.min(s+3,LOTS.length))}>
+              Ver más lotes ({LOTS.length-shown} restantes) <span className="arr">→</span>
+            </button>
+          </div>
+        )}
+      </div>
+    </section>
+  );
+};
+
+/* ── LOCATION ───────────────────────────────────────────────── */
+const LocationSection = () => (
+  <section id="ubicaci" style={{background:'var(--blanco)'}}>
+    <div className="container">
+      <div className="eyebrow" style={{marginBottom:12}}>Dónde estamos</div>
+      <h2 style={{fontFamily:'var(--font-d)',fontWeight:700,fontSize:'clamp(26px,3vw,36px)',color:'var(--caoba-900)',marginBottom:40,lineHeight:1.2}}>Ubicación estratégica</h2>
+      <div className="grid-50">
+        {/* Mapa estilizado con pines de lotes + POIs — Zillow/Redfin pattern */}
+        <div style={{borderRadius:16,overflow:'hidden',background:'#c8d8c2',aspectRatio:'4/3',position:'relative',boxShadow:'var(--sh-md)'}}>
+          <div style={{position:'absolute',inset:0,background:'linear-gradient(155deg,#c5d5c0 0%,#a8c4a0 55%,#8fb89a 100%)'}}/>
+          <svg style={{position:'absolute',inset:0,width:'100%',height:'100%'}} viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice">
+            {/* Rutas */}
+            <path d="M0 155 Q100 145 200 152 T400 148" stroke="white" strokeWidth="9" fill="none" opacity=".75" strokeLinecap="round"/>
+            <path d="M0 155 Q100 145 200 152 T400 148" stroke="rgba(200,210,190,.4)" strokeWidth="7" fill="none" opacity=".5" strokeLinecap="round"/>
+            <path d="M202 0 Q198 100 200 152 T204 300" stroke="white" strokeWidth="6" fill="none" opacity=".65" strokeLinecap="round"/>
+            <path d="M20 230 Q100 220 165 225" stroke="white" strokeWidth="4" fill="none" opacity=".45" strokeLinecap="round"/>
+            <path d="M260 180 Q310 160 380 170" stroke="white" strokeWidth="4" fill="none" opacity=".45" strokeLinecap="round"/>
+            {/* POI pins */}
+            {[[95,80],[300,70],[340,195],[150,230],[275,165],[55,175]].map(([x,y],i)=>(
+              <g key={i}><circle cx={x} cy={y} r="6" fill="var(--verde-bosque)" stroke="white" strokeWidth="2" opacity=".85"/>
+              <circle cx={x} cy={y} r="2.5" fill="white"/></g>
+            ))}
+            {/* Proyecto pin — más grande */}
+            <circle cx="200" cy="152" r="16" fill="var(--cta)" stroke="white" strokeWidth="3" filter="drop-shadow(0 2px 4px rgba(0,0,0,.3))"/>
+            <text x="200" y="157" textAnchor="middle" fill="white" fontSize="9" fontWeight="bold" fontFamily="sans-serif">CQ</text>
+          </svg>
+          <div style={{position:'absolute',bottom:12,left:12,background:'rgba(255,255,255,.92)',backdropFilter:'blur(6px)',borderRadius:8,padding:'6px 12px',fontSize:12,fontWeight:600,color:'var(--caoba-700)',display:'flex',alignItems:'center',gap:5}}>
+            <Ic.Pin/>Caoba Quintas — Pérez Zeledón
+          </div>
+          <div style={{position:'absolute',top:12,right:12,background:'rgba(255,255,255,.85)',borderRadius:6,padding:'5px 8px',fontSize:10,color:'var(--gris)'}}>
+            <span style={{display:'inline-block',width:8,height:8,borderRadius:'50%',background:'var(--cta)',marginRight:4,verticalAlign:'middle'}}/>Proyecto
+            <span style={{display:'inline-block',width:8,height:8,borderRadius:'50%',background:'var(--verde-bosque)',margin:'0 4px 0 8px',verticalAlign:'middle'}}/>Servicios
+          </div>
+        </div>
+
+        {/* Distancias + CTA — reduce objeciones antes del CTA (Realtor.com pattern) */}
+        <div>
+          <div style={{display:'flex',flexDirection:'column',gap:10,marginBottom:28}}>
+            {POIS.map(p=>(
+              <div key={p.label} style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'12px 16px',borderRadius:10,border:'1px solid rgba(61,36,24,.1)',background:'var(--crema-arena)'}}>
+                <div style={{display:'flex',alignItems:'center',gap:10}}>
+                  <span style={{fontSize:18}}>{p.icon}</span>
+                  <span style={{fontSize:14,color:'var(--caoba-900)',fontWeight:500}}>{p.label}</span>
+                </div>
+                <span style={{display:'flex',alignItems:'center',gap:4,fontSize:13,color:'var(--verde-bosque)',fontWeight:700}}>
+                  <Ic.Clock/>{p.dist}
+                </span>
+              </div>
+            ))}
+          </div>
+          {/* CTA #4 — después de ubicación */}
+          <button className="btn-p" onClick={()=>document.getElementById('contacto')?.scrollIntoView()}>
+            Agendar visita guiada <span className="arr">→</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+);
+
+/* ── SOCIAL PROOF ───────────────────────────────────────────── */
+const SocialProof = () => {
+  const stats = [
+    {num:'120+', label:'Familias que ya compraron'},
+    {num:'15',   label:'Años de trayectoria'},
+    {num:'100%', label:'Permisos al día'},
+  ];
+  const testimonials = [
+    {name:'María Fernanda Rojas', detail:'Lote 14 — Sector Norte, 2023', text:'Desde el primer contacto hasta la escritura todo fue claro y sin sorpresas. El proceso fue exactamente como prometieron.', stars:5},
+    {name:'Andrés Calvo',         detail:'Lote 7 — Sector Sur, 2022',   text:'Excelente ubicación y precio justo. El financiamiento directo nos facilitó mucho la compra. Ya empezamos a construir.', stars:5},
+  ];
+  return (
+    <section style={{background:'var(--crema-arena)'}}>
+      <div className="container">
+        {/* Números grandes */}
+        <div className="grid-3" style={{marginBottom:52,textAlign:'center'}}>
+          {stats.map(s=>(
+            <div key={s.num} className="fade-in">
+              <div className="stat-num">{s.num}</div>
+              <div style={{fontSize:14,color:'var(--gris)',marginTop:8,fontWeight:500}}>{s.label}</div>
+            </div>
+          ))}
+        </div>
+        {/* Testimonios reales — Cialdini: autenticidad, foto + nombre + detalle */}
+        <div className="grid-2">
+          {testimonials.map((t,i)=>(
+            <div key={i} style={{background:'var(--blanco)',borderRadius:14,padding:'24px 26px',border:'1.5px solid rgba(61,36,24,.08)',boxShadow:'var(--sh-sm)'}}>
+              <div style={{display:'flex',gap:2,marginBottom:12}}>{[...Array(t.stars)].map((_,j)=><Ic.Star key={j}/>)}</div>
+              <p style={{fontSize:15,color:'var(--caoba-900)',lineHeight:1.7,marginBottom:16,fontStyle:'italic'}}>"{t.text}"</p>
+              <div style={{display:'flex',alignItems:'center',gap:12}}>
+                <div style={{width:42,height:42,borderRadius:'50%',background:'var(--caoba-500)',display:'flex',alignItems:'center',justifyContent:'center',color:'white',fontFamily:'var(--font-d)',fontWeight:700,fontSize:17,flexShrink:0}}>{t.name[0]}</div>
+                <div>
+                  <div style={{fontWeight:700,fontSize:14,color:'var(--caoba-900)'}}>{t.name}</div>
+                  <div style={{fontSize:12,color:'var(--gris)'}}>{t.detail}</div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+/* ── FAQ ────────────────────────────────────────────────────── */
+const FAQ = () => {
+  const [open, setOpen] = useState(null);
+  return (
+    <section style={{background:'var(--blanco)'}}>
+      <div className="container" style={{maxWidth:740,margin:'0 auto'}}>
+        <div className="eyebrow" style={{textAlign:'center',marginBottom:12}}>Preguntas frecuentes</div>
+        <h2 style={{fontFamily:'var(--font-d)',fontWeight:700,fontSize:'clamp(26px,3vw,36px)',textAlign:'center',color:'var(--caoba-900)',marginBottom:40,lineHeight:1.2}}>
+          Resolvemos tus dudas
+        </h2>
+        {/* Progressive disclosure — Sweller: carga cognitiva mínima */}
+        <div>
+          {FAQS.map((f,i)=>(
+            <div key={i} className={`faq-item${open===i?' open':''}`}>
+              <button className="faq-btn" onClick={()=>setOpen(open===i?null:i)} aria-expanded={open===i}>
+                <span style={{fontWeight:600,fontSize:15,color:'var(--caoba-900)'}}>{f.q}</span>
+                <span className="faq-chev"><Ic.ChevDown/></span>
+              </button>
+              <div className="faq-body">
+                <p style={{fontSize:14,color:'var(--gris)',lineHeight:1.85,marginBottom:10}}>{f.a}</p>
+                {/* Micro-CTA en cada respuesta — terciario + WhatsApp (spec sec 5.8) */}
+                <p style={{fontSize:13,color:'var(--gris)'}}>
+                  ¿Más dudas? <a href={`https://wa.me/50600000000?text=${encodeURIComponent(f.wa)}`} className="link-wa">Hablemos por WhatsApp →</a>
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+/* ── CTA FINAL ──────────────────────────────────────────────── */
+const CTAFinal = () => {
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [done, setDone] = useState(false);
+  return (
+    <section id="contacto" style={{background:'var(--verde-bosque)',color:'var(--crema-arena)',textAlign:'center'}}>
+      <div className="container" style={{maxWidth:640}}>
+        <div style={{fontSize:10,fontWeight:700,letterSpacing:'.14em',textTransform:'uppercase',color:'rgba(245,239,230,.55)',marginBottom:16}}>Próximo paso</div>
+        <h2 style={{fontFamily:'var(--font-d)',fontWeight:700,fontSize:'clamp(28px,4vw,44px)',color:'var(--crema-arena)',marginBottom:14,lineHeight:1.2}}>
+          ¿Listo para conocer<br/>Caoba Quintas?
+        </h2>
+        <p style={{fontSize:16,color:'rgba(245,239,230,.78)',marginBottom:32,lineHeight:1.7}}>
+          Agendá una visita guiada este fin de semana.<br/>
+          Te llevamos, te mostramos los lotes, sin compromiso.
+        </p>
+        {!done ? (
+          <>
+          <div style={{display:'flex',gap:10,marginBottom:14,flexWrap:'wrap',justifyContent:'center'}}>
+            <input type="text" value={name} onChange={e=>setName(e.target.value)} placeholder="Tu nombre"
+              style={{flex:1,minWidth:160,height:48,borderRadius:'var(--r)',border:'1.5px solid rgba(245,239,230,.25)',padding:'0 14px',fontSize:14,fontFamily:'var(--font-b)',background:'rgba(255,255,255,.1)',color:'var(--crema-arena)',outline:'none'}}
+              aria-label="Nombre"/>
+            <input type="tel" value={phone} onChange={e=>setPhone(e.target.value)} placeholder="Teléfono"
+              style={{flex:1,minWidth:160,height:48,borderRadius:'var(--r)',border:'1.5px solid rgba(245,239,230,.25)',padding:'0 14px',fontSize:14,fontFamily:'var(--font-b)',background:'rgba(255,255,255,.1)',color:'var(--crema-arena)',outline:'none'}}
+              aria-label="Teléfono"/>
+          </div>
+          <div style={{display:'flex',gap:10,justifyContent:'center',flexWrap:'wrap'}}>
+            {/* CTA primario #5 */}
+            <button className="btn-p" style={{height:52,fontSize:15}} onClick={()=>name&&phone&&setDone(true)}>
+              Agendar visita guiada <span className="arr">→</span>
+            </button>
+            <a href="https://wa.me/50600000000" className="btn-wa" style={{height:52,fontSize:14}}>
+              <Ic.WA/> WhatsApp
+            </a>
+          </div>
+          </>
+        ) : (
+          <div style={{background:'rgba(255,255,255,.12)',borderRadius:14,padding:'28px',display:'flex',flexDirection:'column',alignItems:'center',gap:10}}>
+            <svg className="success-check" width="56" height="56" viewBox="0 0 64 64">
+              <circle cx="32" cy="32" r="30" fill="rgba(255,255,255,.15)" stroke="rgba(245,239,230,.8)" strokeWidth="2.5"/>
+              <path className="check-path" d="M18 33 l10 10 l18-20" fill="none" stroke="var(--crema-arena)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            <div style={{fontWeight:700,fontSize:16}}>¡Agendado! Te contactamos a la brevedad.</div>
+            <div style={{fontSize:14,opacity:.75}}>¿Querés confirmar antes? <a href="https://wa.me/50600000000" style={{color:'#7fffb0',fontWeight:600}}>WhatsApp →</a></div>
+          </div>
+        )}
+      </div>
+    </section>
+  );
+};
+
+/* ── FOOTER ─────────────────────────────────────────────────── */
+const Footer = () => (
+  <footer style={{background:'var(--caoba-900)',color:'rgba(245,239,230,.65)',padding:'44px 0 28px'}}>
+    <div className="container">
+      <div style={{display:'grid',gridTemplateColumns:'2fr 1fr 1fr',gap:32,marginBottom:32}}>
+        <div>
+          <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:12}}>
+            <div style={{width:32,height:32,background:'var(--caoba-700)',borderRadius:7,display:'flex',alignItems:'center',justifyContent:'center'}}>
+              <span style={{color:'white',fontFamily:'var(--font-d)',fontWeight:700,fontSize:15}}>C</span>
+            </div>
+            <span style={{fontFamily:'var(--font-d)',fontWeight:700,fontSize:16,color:'var(--crema-arena)'}}>Caoba Quintas</span>
+          </div>
+          <p style={{fontSize:13,lineHeight:1.85,maxWidth:260}}>Desarrollo de lotes en Pérez Zeledón, Costa Rica. Construí donde siempre quisiste.</p>
+        </div>
+        <div>
+          <div style={{fontWeight:700,fontSize:12,color:'var(--crema-arena)',marginBottom:12,letterSpacing:'.08em',textTransform:'uppercase'}}>Contacto</div>
+          <div style={{fontSize:13,lineHeight:2.1}}>
+            <div>📞 +506 0000-0000</div>
+            <div>📧 info@caobaquintas.com</div>
+            <div>📍 Pérez Zeledón, CR</div>
+          </div>
+        </div>
+        <div>
+          <div style={{fontWeight:700,fontSize:12,color:'var(--crema-arena)',marginBottom:12,letterSpacing:'.08em',textTransform:'uppercase'}}>Legal</div>
+          <div style={{fontSize:13,lineHeight:2.1}}>
+            {['Política de privacidad','Términos de uso','Cookies'].map(l=>(
+              <div key={l}><a href="#" style={{color:'rgba(245,239,230,.65)',textDecoration:'none'}} onMouseEnter={e=>e.currentTarget.style.color='var(--crema-arena)'} onMouseLeave={e=>e.currentTarget.style.color='rgba(245,239,230,.65)'}>{l}</a></div>
+            ))}
+          </div>
+        </div>
+      </div>
+      <div style={{borderTop:'1px solid rgba(245,239,230,.08)',paddingTop:20,display:'flex',justifyContent:'space-between',alignItems:'center',flexWrap:'wrap',gap:10}}>
+        <div style={{fontSize:12}}>© 2024 Caoba Quintas. Todos los derechos reservados.</div>
+        <div style={{fontSize:11,opacity:.4}}>Cada pixel existe para empujar una acción.</div>
+      </div>
+    </div>
+    <style>{`@media(max-width:600px){footer .container>div:first-child{grid-template-columns:1fr!important}}`}</style>
+  </footer>
+);
+
+/* ── TWEAKS ─────────────────────────────────────────────────── */
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "ctaColor": "#E87D3E",
+  "verdeColor": "#2D4A3E",
+  "heroTitle": "Lotes listos para construir tu próximo hogar",
+  "showSkeletons": true
+}/*EDITMODE-END*/;
+
+const TweaksWrapper = () => {
+  const [tweaks, setTweak] = useTweaks(TWEAK_DEFAULTS);
+  useEffect(()=>{
+    document.documentElement.style.setProperty('--cta', tweaks.ctaColor);
+    document.documentElement.style.setProperty('--cta-h', darken(tweaks.ctaColor,30));
+    document.documentElement.style.setProperty('--verde-bosque', tweaks.verdeColor);
+  },[tweaks.ctaColor, tweaks.verdeColor]);
+  return (
+    <TweaksPanel>
+      <TweakSection label="Identidad"/>
+      <TweakColor label="Color CTA (único — Von Restorff)" value={tweaks.ctaColor} onChange={v=>setTweak('ctaColor',v)}/>
+      <TweakColor label="Verde bosque" value={tweaks.verdeColor} onChange={v=>setTweak('verdeColor',v)}/>
+      <TweakSection label="Contenido"/>
+      <TweakText label="Titular del hero" value={tweaks.heroTitle} onChange={v=>setTweak('heroTitle',v)}/>
+    </TweaksPanel>
+  );
+};
+function darken(hex,amt){try{const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16),c=v=>Math.max(0,Math.min(255,v));return`rgb(${c(r-amt)},${c(g-amt)},${c(b-amt)})`}catch{return hex}}
+
+/* ── SCROLL UTILITIES ───────────────────────────────────────── */
+const useScrollReveal = () => {
+  useEffect(()=>{
+    const els = document.querySelectorAll('.fade-in');
+    const io = new IntersectionObserver(entries=>{
+      entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target)}});
+    },{threshold:.12});
+    els.forEach(el=>io.observe(el));
+    return()=>io.disconnect();
+  },[]);
+};
+
+/* ── BACK TO TOP ────────────────────────────────────────────── */
+const BackToTop = () => {
+  const [show, setShow] = useState(false);
+  useEffect(()=>{
+    const fn=()=>setShow(window.scrollY>800);
+    window.addEventListener('scroll',fn,{passive:true});
+    return()=>window.removeEventListener('scroll',fn);
+  },[]);
+  return (
+    <button className={`btt${show?'':' hidden'}`} onClick={()=>window.scrollTo({top:0,behavior:'smooth'})} aria-label="Volver al inicio" title="Volver al inicio">
+      <Ic.ChevUp/>
+    </button>
+  );
+};
+
+/* ── APP ────────────────────────────────────────────────────── */
+const App = () => {
+  useScrollReveal();
+  return (
+    <>
+      <Navbar/>
+      <main>
+        <Hero/>
+        <FilterBar/>
+        <Benefits/>
+        <LotsSection/>
+        <LocationSection/>
+        <SocialProof/>
+        <FAQ/>
+        <CTAFinal/>
+      </main>
+      <Footer/>
+
+      {/* WhatsApp flotante — animación de pulso c/10s (spec sec 5.11) */}
+      <a href="https://wa.me/50600000000" className="wa-float" aria-label="Contactar por WhatsApp"><Ic.WA size={26}/></a>
+
+      {/* Botón volver arriba — aparece tras 800px de scroll (spec sec 5.11) */}
+      <BackToTop/>
+
+      {/* Sticky mobile CTA — 100% ancho, always accesible con pulgar (Fitts, spec sec 5.11 + 8) */}
+      <div className="mob-bar">
+        <button className="btn-p" style={{flex:1,justifyContent:'center',height:52,fontSize:14}} onClick={()=>document.getElementById('contacto')?.scrollIntoView()}>
+          Solicitar información <span className="arr">→</span>
+        </button>
+        <a href="https://wa.me/50600000000" className="wa-icon" aria-label="WhatsApp"><Ic.WA size={20}/></a>
+      </div>
+
+      <TweaksWrapper/>
+    </>
+  );
+};
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>
