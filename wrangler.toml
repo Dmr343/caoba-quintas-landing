@@ -1,0 +1,14 @@
+name            = "caoba-leads"
+main            = "worker/index.js"
+compatibility_date = "2024-01-01"
+
+[[d1_databases]]
+binding  = "DB"
+database_name = "caoba-leads"
+database_id   = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+
+[vars]
+NOTIFY_EMAIL = "udmr343@gmail.com"
+
+# Secrets (NO van aquí — usa: npx wrangler secret put RESEND_API_KEY)
+# RESEND_API_KEY = "re_..."

@@ -409,12 +409,23 @@ const Hero = () => {
   const [submitted, setSubmitted] = useState(false);
   const [errors, setErrors] = useState({});
 
-  const submit = (e) => {
+  const [loading, setLoading] = useState(false);
+
+  const submit = async (e) => {
     e.preventDefault();
     const errs = {};
     if (!name.trim()) errs.name = 'Ingresá tu nombre';
     if (!phone.trim()) errs.phone = 'Ingresá tu teléfono o email';
     if (Object.keys(errs).length) { setErrors(errs); return; }
+    setLoading(true);
+    try {
+      await fetch('/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nombre: name.trim(), telefono: phone.trim(), fuente: 'hero' }),
+      });
+    } catch (_) { /* continúa — muestra éxito igual para no bloquear UX */ }
+    setLoading(false);
     setSubmitted(true);
   };
 
@@ -441,7 +452,7 @@ const Hero = () => {
                   <Field id="h-name" label="Nombre" value={name} onChange={v=>{setName(v);setErrors(p=>({...p,name:''}))}} error={errors.name} placeholder="Tu nombre completo"/>
                   <Field id="h-phone" label="Teléfono o email" type="tel" value={phone} onChange={v=>{setPhone(v);setErrors(p=>({...p,phone:''}))}} error={errors.phone} placeholder="8888-0000"/>
                   <div style={{paddingBottom:errors.name||errors.phone?'18px':0}}>
-                    <button type="submit" className="btn-p">Quiero información <span className="arr">→</span></button>
+                    <button type="submit" className="btn-p" disabled={loading}>{loading ? 'Enviando…' : <>Quiero información <span className="arr">→</span></>}</button>
                   </div>
                 </div>
               </form>
@@ -949,6 +960,21 @@ const CTAFinal = () => {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [done, setDone] = useState(false);
+  const [sending, setSending] = useState(false);
+
+  const submitFinal = async () => {
+    if (!name.trim() || !phone.trim()) return;
+    setSending(true);
+    try {
+      await fetch('/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nombre: name.trim(), telefono: phone.trim(), fuente: 'cta_final' }),
+      });
+    } catch (_) { /* silencioso — no bloquear UX */ }
+    setSending(false);
+    setDone(true);
+  };
   return (
     <section id="contacto" style={{background:'var(--verde-bosque)',color:'var(--crema-arena)',textAlign:'center'}}>
       <div className="container" style={{maxWidth:640}}>
@@ -972,8 +998,8 @@ const CTAFinal = () => {
           </div>
           <div style={{display:'flex',gap:10,justifyContent:'center',flexWrap:'wrap'}}>
             {/* CTA primario #5 */}
-            <button className="btn-p" style={{height:52,fontSize:15}} onClick={()=>name&&phone&&setDone(true)}>
-              Agendar visita guiada <span className="arr">→</span>
+            <button className="btn-p" style={{height:52,fontSize:15}} onClick={submitFinal} disabled={sending}>
+              {sending ? 'Enviando…' : <>Agendar visita guiada <span className="arr">→</span></>}
             </button>
             <a href="https://wa.me/50600000000" className="btn-wa" style={{height:52,fontSize:14}}>
               <Ic.WA/> WhatsApp
