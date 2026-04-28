@@ -1,6 +1,18 @@
 # Bitácora — caoba_landing_page
 
 
+## 2026-04-28 | 15:16
+
+**Resumen:** Se redactaron dos PRDs para el proyecto — uno de correcciones de contenido de la landing page y otro para un bot de WhatsApp de captación automatizada de leads — y se publicaron como issues en GitHub.
+
+**Cambios:**
+- Creado Issue #2: PRD de correcciones de contenido y mejoras visuales de la landing page
+- Creado Issue #3: PRD de bot de WhatsApp para captación automatizada de leads con Evolution API
+
+**Archivos clave:** `https://github.com/Dmr343/caoba-quintas-landing/issues/2`, `https://github.com/Dmr343/caoba-quintas-landing/issues/3`
+
+---
+
 ## 2026-04-28 | 14:08
 
 **Resumen:** Se resolvió el problema del logo que no aparecía al abrir el HTML como archivo autónomo, embebiendo la imagen como base64 directamente en el código.
