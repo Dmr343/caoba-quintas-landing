@@ -1,6 +1,14 @@
 # Bitácora — caoba_landing_page
 
 
+## 2026-04-27 | 22:01
+
+**Resumen:** Se revisó el estado del proyecto para determinar los pasos pendientes antes del go-live del sitio web de Caoba Quintas.
+
+**Archivos clave:** `images/`, `wrangler.toml`, `migrations/0001_leads.sql`
+
+---
+
 ## 2026-04-27 | 18:08
 
 **Resumen:** Se incorporaron al repositorio los activos gráficos de marca del proyecto: manual de marca y logos oficiales en múltiples variantes.
