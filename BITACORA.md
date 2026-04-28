@@ -1,6 +1,14 @@
 # Bitácora — caoba_landing_page
 
 
+## 2026-04-28 | 12:47
+
+**Resumen:** Revisión del estado del proyecto y preparación del checklist de go-live para despliegue en producción con Cloudflare Pages, Workers y D1.
+
+**Archivos clave:** `wrangler.toml`, `migrations/0001_leads.sql`
+
+---
+
 ## 2026-04-27 | 22:01
 
 **Resumen:** Se revisó el estado del proyecto para determinar los pasos pendientes antes del go-live del sitio web de Caoba Quintas.
