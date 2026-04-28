@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Caoba Quintas — Lotes en Costa Rica</title>
-<meta name="description" content="Lotes listos para construir en Costa Rica. Financiamiento directo. Visitas guiadas los fines de semana. Desde ₡18 millones.">
+<meta name="description" content="Lotes listos para construir en Costa Rica. Financiamiento directo. Visitas guiadas todos los días. Desde ₡18 millones.">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -321,14 +321,8 @@ const Navbar = () => {
     <header style={{position:'sticky',top:0,zIndex:700,background:scrolled?'rgba(245,239,230,.9)':'var(--crema-arena)',backdropFilter:scrolled?'blur(14px)':'none',borderBottom:scrolled?'1px solid rgba(61,36,24,.1)':'1px solid transparent',transition:'all .3s'}}>
       <div className="container" style={{display:'flex',alignItems:'center',justifyContent:'space-between',height:72}}>
         {/* Logo */}
-        <a href="#" style={{textDecoration:'none',display:'flex',alignItems:'center',gap:10}}>
-          <div style={{width:38,height:38,background:'var(--caoba-700)',borderRadius:9,display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 2px 8px rgba(107,61,40,.3)'}}>
-            <span style={{color:'white',fontFamily:'var(--font-d)',fontWeight:700,fontSize:18}}>C</span>
-          </div>
-          <div>
-            <div style={{fontFamily:'var(--font-d)',fontWeight:700,fontSize:17,color:'var(--caoba-900)',lineHeight:1.1}}>Caoba</div>
-            <div style={{fontFamily:'var(--font-b)',fontSize:9,color:'var(--gris)',letterSpacing:'.14em',textTransform:'uppercase'}}>Quintas</div>
-          </div>
+        <a href="#" style={{textDecoration:'none',display:'flex',alignItems:'center'}}>
+          <img src="images/logo_v2_principal.png" alt="Caoba Quintas" style={{height:44,width:'auto'}}/>
         </a>
 
         {/* Desktop nav — max 4 items (Hick's Law) */}
@@ -372,7 +366,7 @@ const Navbar = () => {
       <div className="mob-drawer-overlay" onClick={()=>setDrawerOpen(false)}/>
       <div className="mob-drawer-panel">
         <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:32}}>
-          <span style={{fontFamily:'var(--font-d)',fontWeight:700,fontSize:18,color:'var(--caoba-900)'}}>Caoba Quintas</span>
+          <img src="images/logo_v2_principal.png" alt="Caoba Quintas" style={{height:36,width:'auto'}}/>
           <button onClick={()=>setDrawerOpen(false)} aria-label="Cerrar menú" style={{background:'none',border:'none',cursor:'pointer',color:'var(--caoba-700)'}}><Ic.X/></button>
         </div>
         <nav style={{display:'flex',flexDirection:'column',gap:4,marginBottom:32}}>
@@ -442,7 +436,7 @@ const Hero = () => {
               <em style={{color:'var(--verde-bosque)',fontStyle:'normal'}}>tu próximo hogar</em>
             </h1>
             <p style={{fontSize:17,color:'var(--gris)',marginBottom:28,maxWidth:460,lineHeight:1.65}}>
-              Desde <strong className="tnum" style={{color:'var(--caoba-700)'}}>₡18 millones</strong>. Financiamiento directo. Visitas guiadas los fines de semana.
+              Desde <strong className="tnum" style={{color:'var(--caoba-700)'}}>₡18 millones</strong>. Financiamiento directo. Visitas guiadas todos los días.
             </p>
 
             {/* Formulario inline — 2 campos máx. (Ley de Hick, Carga cognitiva) */}
@@ -710,8 +704,18 @@ const LeafletMap = () => {
       { attribution: '© Esri, Maxar, Earthstar Geographics', maxZoom: 20 }
     ).addTo(map);
 
-    // Lot polygons from real KML/GeoJSON
+    // Helper: features spanning >300 m in any direction are roads/boundaries, not lots
+    function featureIsRoad(feature) {
+      const coords = feature.geometry.coordinates[0];
+      const lats = coords.map(c => c[1]);
+      const lons = coords.map(c => c[0]);
+      return (Math.max(...lats) - Math.min(...lats)) * 111000 > 300
+          || (Math.max(...lons) - Math.min(...lons)) * 111000 > 300;
+    }
+
+    // Lot polygons
     L.geoJSON(LOTS_GEO, {
+      filter: f => !featureIsRoad(f),
       style: {
         fillColor: '#E87D3E',
         fillOpacity: 0.25,
@@ -732,6 +736,18 @@ const LeafletMap = () => {
             ).openPopup();
           },
         });
+      },
+    }).addTo(map);
+
+    // Road / boundary features — rendered as paths, no fill
+    L.geoJSON(LOTS_GEO, {
+      filter: featureIsRoad,
+      style: {
+        fillOpacity: 0,
+        color: '#6B3D28',
+        weight: 2,
+        dashArray: '6 4',
+        opacity: 0.6,
       },
     }).addTo(map);
 
