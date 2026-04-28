@@ -1,6 +1,18 @@
 # Bitácora — caoba_landing_page
 
 
+## 2026-04-27 | 18:08
+
+**Resumen:** Se incorporaron al repositorio los activos gráficos de marca del proyecto: manual de marca y logos oficiales en múltiples variantes.
+
+**Cambios:**
+- Agregado `Manual_de_Marca_v5.html` con las guías de identidad visual de Caoba Quintas
+- Agregados 4 logos en `images/`: versión principal, crema, sobre verde y formato JPEG
+
+**Archivos clave:** `Manual_de_Marca_v5.html`, `images/logo.jpeg`, `images/logo_v2_crema.png`, `images/logo_v2_principal.png`, `images/logo_v2_sobre_verde.png`
+
+---
+
 ## 2026-04-27 | 16:26
 
 **Resumen:** Consulta sobre qué archivos subir para generar un manual de marca completo de Caoba Quintas usando IA.
