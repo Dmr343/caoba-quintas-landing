@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Caoba Quintas — Lotes en Costa Rica</title>
-<meta name="description" content="Lotes listos para construir en Costa Rica. Financiamiento directo. Visitas guiadas todos los días. Desde ₡18 millones.">
+<meta name="description" content="Lotes listos para construir en Costa Rica. Financiamiento directo. Visitas guiadas todos los días. Desde ₡19 millones.">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -616,8 +616,8 @@ const { useState, useEffect, useRef, useCallback } = React;
 
 /* ── DATA ─────────────────────────────────────────────────────── */
 const LOTS = [
-  { id:1, name:"Lote Cedro",      price:"₡22,500,000", size:"820 m²",   tag:"Disponible", zone:"Sector Norte", features:["Agua potable","Vista montaña","Acceso pavimentado"], bg:"#2D4A3E" },
-  { id:2, name:"Lote Roble",      price:"₡18,000,000", size:"600 m²",   tag:"Disponible", zone:"Sector Sur",   features:["Agua potable","Con árboles","Frente calle"],         bg:"#6B3D28" },
+  { id:1, name:"Lote Cedro",      price:"₡22,500,000", size:"820 m²",   tag:"Disponible", zone:"Sector Norte", features:["Agua potable","Vista montaña","Vista al volcán Miravalles"], bg:"#2D4A3E" },
+  { id:2, name:"Lote Roble",      price:"₡19,000,000", size:"600 m²",   tag:"Disponible", zone:"Sector Sur",   features:["Agua potable","Con árboles","Frente calle"],         bg:"#6B3D28" },
   { id:3, name:"Lote Guanacaste", price:"₡31,000,000", size:"1,200 m²", tag:"Disponible", zone:"Sector Norte", features:["Agua y luz","Vista panorámica","Cerca de río"],       bg:"#3D5C45" },
   { id:4, name:"Lote Almendro",   price:"₡19,500,000", size:"700 m²",   tag:"Reservado",  zone:"Sector Este",  features:["Agua potable","Plano","Listo para construir"],         bg:"#8B5A3C" },
   { id:5, name:"Lote Pochote",    price:"₡25,000,000", size:"950 m²",   tag:"Disponible", zone:"Sector Sur",   features:["Agua y luz","Arbolado","Vista jardín"],               bg:"#4a6545" },
@@ -626,19 +626,19 @@ const LOTS = [
 
 const FAQS = [
   { q:"¿Cómo es el proceso de compra?",    a:"El proceso es sencillo: elegís el lote, separás con un depósito, firmamos promesa de compraventa y escrituramos ante notario. Todo en 30–60 días. Te acompañamos en cada paso.", wa:"Contame más sobre el proceso de compra" },
-  { q:"¿Ofrecen financiamiento directo?",  a:"Sí. Financiamiento directo sin banco: hasta 60 meses plazo, prima desde el 20%. También coordinamos con tu banco o cooperativa.", wa:"Quiero saber sobre el financiamiento" },
-  { q:"¿Puedo construir cuando quiera?",   a:"Sí. Los lotes se entregan con todos los permisos en regla. Podés iniciar construcción cuando lo decidás, sin restricciones de plazo.", wa:"Tengo dudas sobre construcción" },
-  { q:"¿Qué incluye el precio?",           a:"Escritura pública limpia, derecho de aguas, acceso vial interno, y todos los permisos municipales y SETENA al día. Sin costos ocultos.", wa:"Quiero más detalles del precio" },
-  { q:"¿Cómo agendo una visita guiada?",   a:"Llenás el formulario de esta página, nos llamás, o escribís por WhatsApp. Visitas guiadas: sábados y domingos de 9 a.m. a 4 p.m.", wa:"Quiero agendar una visita" },
+  { q:"¿Ofrecen financiamiento directo?",  a:"Sí. Financiamiento directo: hasta 360 meses plazo, sin prima ni fiador.", wa:"Quiero saber sobre el financiamiento" },
+  { q:"¿Qué incluye el precio?",           a:"Escritura pública limpia, Disponibilidad de agua y luz, acceso vial interno y todos los permisos municipales al día. Sin costos ocultos.", wa:"Quiero más detalles del precio" },
+  { q:"¿Cómo agendo una visita guiada?",   a:"Llenás el formulario de esta página o escribís por WhatsApp. Visitas guiadas todos los días de 9 a.m. a 4 p.m.", wa:"Quiero agendar una visita" },
 ];
 
 const POIS = [
-  { icon:"🏥", label:"Hospital más cercano", dist:"10 min" },
-  { icon:"🏪", label:"Supermercado",          dist:"8 min"  },
-  { icon:"🏖️", label:"Playa Dominical",       dist:"25 min" },
-  { icon:"✈️", label:"Aeropuerto Juan Santamaría", dist:"3 h 10 min" },
-  { icon:"🏫", label:"Escuela y colegio",     dist:"5 min"  },
-  { icon:"⛽", label:"Gasolinera",            dist:"3 min"  },
+  { label:"Supermercado",                   dist:"5 min"  },
+  { label:"Hospital",                       dist:"20 min" },
+  { label:"EBAIS",                          dist:"5 min"  },
+  { label:"Playa Panamá",                   dist:"1 h"    },
+  { label:"Aeropuerto Daniel Oduber (Liberia)", dist:"40 min" },
+  { label:"Escuela y colegio",              dist:"8 min"  },
+  { label:"Gasolinera",                     dist:"5 min"  },
 ];
 
 /* ── ICONS ──────────────────────────────────────────────────── */
@@ -659,6 +659,7 @@ const Ic = {
   Clock:()=><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>,
   Star:()=><svg width="14" height="14" viewBox="0 0 24 24" fill="#D4A017" stroke="#D4A017" strokeWidth="1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>,
   Filter:()=><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>,
+  Leaf:()=><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M11 20A7 7 0 015 13 7 7 0 0112 6c3 0 6 2 7 5"/><path d="M11 20c0-4.97 4-9 9-9"/><line x1="11" y1="20" x2="11" y2="13"/></svg>,
   WA:({size=24})=><svg width={size} height={size} viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.999 2C6.478 2 2 6.478 2 12c0 1.854.504 3.593 1.383 5.084L2 22l5.032-1.366A9.95 9.95 0 0012 22c5.522 0 10-4.478 10-10S17.521 2 11.999 2zm0 18a7.96 7.96 0 01-4.079-1.118l-.293-.174-3.044.826.826-3.027-.191-.312A7.957 7.957 0 014 12c0-4.411 3.589-8 8-8 4.41 0 8 3.589 8 8s-3.59 8-8 8z"/></svg>,
 };
 
@@ -769,9 +770,6 @@ const Navbar = () => {
 
         {/* Mobile right group */}
         <div style={{display:'none'}} className="mob-right">
-          <a href="tel:+50600000000" aria-label="Llamar" style={{width:40,height:40,display:'flex',alignItems:'center',justifyContent:'center',color:'var(--caoba-700)',textDecoration:'none'}}>
-            <Ic.Phone/>
-          </a>
           <a href="https://wa.me/50600000000" aria-label="WhatsApp" style={{width:40,height:40,display:'flex',alignItems:'center',justifyContent:'center',background:'#25D366',borderRadius:8,textDecoration:'none'}}>
             <Ic.WA size={18}/>
           </a>
@@ -857,7 +855,7 @@ const Hero = () => {
               <em style={{color:'var(--verde-bosque)',fontStyle:'normal'}}>tu próximo hogar</em>
             </h1>
             <p style={{fontSize:17,color:'var(--gris)',marginBottom:28,maxWidth:460,lineHeight:1.65}}>
-              Desde <strong className="tnum" style={{color:'var(--caoba-700)'}}>₡18 millones</strong>. Financiamiento directo. Visitas guiadas todos los días.
+              Desde <strong className="tnum" style={{color:'var(--caoba-700)'}}>₡19 millones</strong>. Financiamiento directo. Visitas guiadas todos los días.
             </p>
 
             {/* Formulario inline — 2 campos máx. (Ley de Hick, Carga cognitiva) */}
@@ -875,7 +873,7 @@ const Hero = () => {
 
             {/* Trust signals — prueba social + autoridad (Cialdini) */}
             <div style={{display:'flex',flexWrap:'wrap',gap:16,marginTop:16}}>
-              {['120+ familias ya compraron','Permisos SETENA al día','Escrituración inmediata'].map(t=>(
+              {['58+ familias ya compraron','Escrituración inmediata'].map(t=>(
                 <div key={t} style={{display:'flex',alignItems:'center',gap:5,fontSize:13,color:'var(--caoba-700)',fontWeight:500}}>
                   <Ic.Check/>{t}
                 </div>
@@ -965,9 +963,10 @@ const FilterBar = () => {
 /* ── BENEFITS ───────────────────────────────────────────────── */
 const Benefits = () => {
   const items = [
-    {icon:<Ic.Mountain/>, title:"Naturaleza auténtica", desc:"Rodeado de bosque tropical. Vista a cerros y quebradas. El silencio que la ciudad no puede dar."},
-    {icon:<Ic.Road/>,     title:"Acceso garantizado",   desc:"Calle de acceso pavimentada. A 15 minutos del centro. Ruta hacia la playa sin complicaciones."},
-    {icon:<Ic.Shield/>,   title:"100% legal y seguro",  desc:"Escritura pública, planos catastrados, permisos SETENA y municipales al día. Sin sorpresas."},
+    {icon:<Ic.Mountain/>, title:"Naturaleza auténtica",   desc:"Rodeado de Bosque tropical seco. Vista al volcán Miravalles y quebradas. El silencio que la ciudad no puede dar."},
+    {icon:<Ic.Road/>,     title:"Acceso garantizado",     desc:"A 5 minutos del centro de Bagaces. Ruta hacia la playa sin complicaciones."},
+    {icon:<Ic.Shield/>,   title:"100% legal y seguro",    desc:"Escritura pública, planos catastrados y permisos municipales al día. Sin sorpresas."},
+    {icon:<Ic.Leaf/>,     title:"Servicios para su lote", desc:"Chapia y mantenimiento de vegetación, cercas vivas y de alambre, y construcción de pozos artesanales."},
   ];
   return (
     <section id="beneficios" style={{background:'var(--blanco)'}}>
@@ -1223,7 +1222,7 @@ const LocationSection = () => (
             {POIS.map(p=>(
               <div key={p.label} style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'12px 16px',borderRadius:10,border:'1px solid rgba(61,36,24,.1)',background:'var(--crema-arena)'}}>
                 <div style={{display:'flex',alignItems:'center',gap:10}}>
-                  <span style={{fontSize:18}}>{p.icon}</span>
+                  <Ic.Pin/>
                   <span style={{fontSize:14,color:'var(--caoba-900)',fontWeight:500}}>{p.label}</span>
                 </div>
                 <span style={{display:'flex',alignItems:'center',gap:4,fontSize:13,color:'var(--verde-bosque)',fontWeight:700}}>
@@ -1244,39 +1243,18 @@ const LocationSection = () => (
 /* ── SOCIAL PROOF ───────────────────────────────────────────── */
 const SocialProof = () => {
   const stats = [
-    {num:'120+', label:'Familias que ya compraron'},
+    {num:'58+', label:'Familias que ya compraron'},
     {num:'15',   label:'Años de trayectoria'},
     {num:'100%', label:'Permisos al día'},
-  ];
-  const testimonials = [
-    {name:'María Fernanda Rojas', detail:'Lote 14 — Sector Norte, 2023', text:'Desde el primer contacto hasta la escritura todo fue claro y sin sorpresas. El proceso fue exactamente como prometieron.', stars:5},
-    {name:'Andrés Calvo',         detail:'Lote 7 — Sector Sur, 2022',   text:'Excelente ubicación y precio justo. El financiamiento directo nos facilitó mucho la compra. Ya empezamos a construir.', stars:5},
   ];
   return (
     <section style={{background:'var(--crema-arena)'}}>
       <div className="container">
-        {/* Números grandes */}
-        <div className="grid-3" style={{marginBottom:52,textAlign:'center'}}>
+        <div className="grid-3" style={{textAlign:'center'}}>
           {stats.map(s=>(
             <div key={s.num} className="fade-in">
               <div className="stat-num">{s.num}</div>
               <div style={{fontSize:14,color:'var(--gris)',marginTop:8,fontWeight:500}}>{s.label}</div>
-            </div>
-          ))}
-        </div>
-        {/* Testimonios reales — Cialdini: autenticidad, foto + nombre + detalle */}
-        <div className="grid-2">
-          {testimonials.map((t,i)=>(
-            <div key={i} style={{background:'var(--blanco)',borderRadius:14,padding:'24px 26px',border:'1.5px solid rgba(61,36,24,.08)',boxShadow:'var(--sh-sm)'}}>
-              <div style={{display:'flex',gap:2,marginBottom:12}}>{[...Array(t.stars)].map((_,j)=><Ic.Star key={j}/>)}</div>
-              <p style={{fontSize:15,color:'var(--caoba-900)',lineHeight:1.7,marginBottom:16,fontStyle:'italic'}}>"{t.text}"</p>
-              <div style={{display:'flex',alignItems:'center',gap:12}}>
-                <div style={{width:42,height:42,borderRadius:'50%',background:'var(--caoba-500)',display:'flex',alignItems:'center',justifyContent:'center',color:'white',fontFamily:'var(--font-d)',fontWeight:700,fontSize:17,flexShrink:0}}>{t.name[0]}</div>
-                <div>
-                  <div style={{fontWeight:700,fontSize:14,color:'var(--caoba-900)'}}>{t.name}</div>
-                  <div style={{fontSize:12,color:'var(--gris)'}}>{t.detail}</div>
-                </div>
-              </div>
             </div>
           ))}
         </div>
@@ -1491,7 +1469,6 @@ const Footer = () => (
       </div>
       <div style={{borderTop:'1px solid rgba(245,239,230,.08)',paddingTop:20,display:'flex',justifyContent:'space-between',alignItems:'center',flexWrap:'wrap',gap:10}}>
         <div style={{fontSize:12}}>© 2024 Caoba Quintas. Todos los derechos reservados.</div>
-        <div style={{fontSize:11,opacity:.4}}>Cada pixel existe para empujar una acción.</div>
       </div>
     </div>
     <style>{`@media(max-width:600px){footer .container>div:first-child{grid-template-columns:1fr!important}}`}</style>
