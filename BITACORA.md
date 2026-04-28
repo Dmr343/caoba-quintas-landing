@@ -1,6 +1,19 @@
 # Bitácora — caoba_landing_page
 
 
+## 2026-04-28 | 14:08
+
+**Resumen:** Se resolvió el problema del logo que no aparecía al abrir el HTML como archivo autónomo, embebiendo la imagen como base64 directamente en el código.
+
+**Cambios:**
+- Logo embebido en base64 para eliminar dependencia de la carpeta `images/`
+- Panel de tweaks (`tweaks-panel.jsx`) inlineado en el HTML para evitar errores de ruta
+- `index.html` sincronizado con `index-dev.html` como fuente única de verdad
+
+**Archivos clave:** `index-dev.html`, `index.html`
+
+---
+
 ## 2026-04-28 | 12:47
 
 **Resumen:** Revisión del estado del proyecto y preparación del checklist de go-live para despliegue en producción con Cloudflare Pages, Workers y D1.
