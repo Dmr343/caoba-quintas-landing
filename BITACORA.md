@@ -1,6 +1,11 @@
 # Bitácora — caoba_landing_page
 
 
+No recibí argumentos. Necesito dos datos antes de continuar:
+
+1. **Proyectos a incluir** — ¿cuáles trabajaste esta semana? (ej: `caoba_landing_page`, algún otro)
+2. **Horas totales** — ¿cuántas horas en total trabajaste esta semana?
+
 ## 2026-04-28 | 15:16
 
 **Resumen:** Se redactaron dos PRDs para el proyecto — uno de correcciones de contenido de la landing page y otro para un bot de WhatsApp de captación automatizada de leads — y se publicaron como issues en GitHub.
