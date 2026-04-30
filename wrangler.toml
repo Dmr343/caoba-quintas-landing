@@ -1,11 +1,14 @@
 name            = "caoba-leads"
 main            = "worker/index.js"
 compatibility_date = "2024-01-01"
+routes = [
+  { pattern = "caobaquintas.com/api/*", zone_name = "caobaquintas.com" }
+]
 
 [[d1_databases]]
 binding  = "DB"
 database_name = "caoba-leads"
-database_id   = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+database_id   = "9a64e966-57d7-4bc2-a281-6fb103253a16"
 
 [vars]
 NOTIFY_EMAIL = "udmr343@gmail.com"
