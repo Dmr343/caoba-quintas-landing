@@ -1,6 +1,20 @@
 # Bitácora — caoba_landing_page
 
 
+## 2026-04-30 | 18:35
+
+**Resumen:** Se implementó el mapa interactivo por lote con polígonos clicables y se actualizaron las tarjetas con fotos reales de drone como fondo.
+
+**Cambios:**
+- Tarjetas de los 11 lotes ahora usan fotos reales de drone con overlay semitransparente en color de marca
+- Mapa interactivo con polígonos verdes (disponibles) y grises (vendidos)
+- Popup por lote con nombre, tamaño, zona, precio y botón directo a WhatsApp
+- Matching automático de polígonos GeoJSON a lotes por algoritmo de área + posición
+
+**Archivos clave:** `index.html`, `worker/index.js`
+
+---
+
 No recibí argumentos. Necesito dos datos antes de continuar:
 
 1. **Proyectos a incluir** — ¿cuáles trabajaste esta semana? (ej: `caoba_landing_page`, algún otro)
