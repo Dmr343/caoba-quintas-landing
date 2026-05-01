@@ -616,12 +616,17 @@ const { useState, useEffect, useRef, useCallback } = React;
 
 /* ── DATA ─────────────────────────────────────────────────────── */
 const LOTS = [
-  { id:1, name:"Lote Cedro",      price:"₡22,500,000", size:"820 m²",   tag:"Disponible", zone:"Sector Norte", features:["Agua potable","Vista montaña","Vista al volcán Miravalles"], bg:"#2D4A3E" },
-  { id:2, name:"Lote Roble",      price:"₡19,000,000", size:"600 m²",   tag:"Disponible", zone:"Sector Sur",   features:["Agua potable","Con árboles","Frente calle"],         bg:"#6B3D28" },
-  { id:3, name:"Lote Guanacaste", price:"₡31,000,000", size:"1,200 m²", tag:"Disponible", zone:"Sector Norte", features:["Agua y luz","Vista panorámica","Cerca de río"],       bg:"#3D5C45" },
-  { id:4, name:"Lote Almendro",   price:"₡19,500,000", size:"700 m²",   tag:"Reservado",  zone:"Sector Este",  features:["Agua potable","Plano","Listo para construir"],         bg:"#8B5A3C" },
-  { id:5, name:"Lote Pochote",    price:"₡25,000,000", size:"950 m²",   tag:"Disponible", zone:"Sector Sur",   features:["Agua y luz","Arbolado","Vista jardín"],               bg:"#4a6545" },
-  { id:6, name:"Lote Nance",      price:"₡21,000,000", size:"750 m²",   tag:"Disponible", zone:"Sector Este",  features:["Agua potable","Esquinero","Privacidad total"],         bg:"#5c3a22" },
+  { id:1,  name:"Lote 1",  price:"Consultar precio", size:"9.414 m²", tag:"Disponible", zone:"Sector Sur",     features:["Agua y luz","El más amplio del proyecto","Acceso directo vial"],  bg:"#2D4A3E" },
+  { id:2,  name:"Lote 14", price:"Consultar precio", size:"3.589 m²", tag:"Disponible", zone:"Sector Norte",   features:["Agua y luz","Cerca de acceso principal","Vista despejada"],         bg:"#6B3D28" },
+  { id:3,  name:"Lote 28", price:"Consultar precio", size:"5.017 m²", tag:"Disponible", zone:"Sector Sur",     features:["Agua y luz","Entorno tranquilo","Arborizado"],                     bg:"#3D5C45" },
+  { id:4,  name:"Lote 30", price:"Consultar precio", size:"5.155 m²", tag:"Disponible", zone:"Sector Central", features:["Agua y luz","Frente a boulevard interno","Listo para construir"],  bg:"#8B5A3C" },
+  { id:5,  name:"Lote 31", price:"Consultar precio", size:"5.051 m²", tag:"Disponible", zone:"Sector Central", features:["Agua y luz","Frente a boulevard interno","Privacidad"],            bg:"#4a6545" },
+  { id:6,  name:"Lote 32", price:"Consultar precio", size:"5.034 m²", tag:"Disponible", zone:"Sector Central", features:["Agua y luz","Frente a boulevard interno","Acceso amplio"],         bg:"#5c3a22" },
+  { id:7,  name:"Lote 33", price:"Consultar precio", size:"5.018 m²", tag:"Disponible", zone:"Sector Central", features:["Agua y luz","Frente a boulevard interno","Esquinero"],             bg:"#2D4A3E" },
+  { id:8,  name:"Lote 34", price:"Consultar precio", size:"5.082 m²", tag:"Disponible", zone:"Sector Central", features:["Agua y luz","Frente a boulevard interno","Vista al entorno"],      bg:"#6B3D28" },
+  { id:9,  name:"Lote 35", price:"Consultar precio", size:"5.061 m²", tag:"Disponible", zone:"Sector Central", features:["Agua y luz","Frente a boulevard interno","Terreno regular"],       bg:"#3D5C45" },
+  { id:10, name:"Lote 36", price:"Consultar precio", size:"5.034 m²", tag:"Disponible", zone:"Sector Central", features:["Agua y luz","Frente a boulevard interno","Colinda con zona verde"], bg:"#8B5A3C" },
+  { id:11, name:"Lote 39", price:"Consultar precio", size:"5.000 m²", tag:"Disponible", zone:"Sector Central", features:["Agua y luz","Boulevard interno","Amplio y plano"],                 bg:"#4a6545" },
 ];
 
 const FAQS = [
@@ -689,25 +694,27 @@ const Field = ({id, label, type="text", value, onChange, error, placeholder}) =>
 const HeroCarousel = () => {
   const [active, setActive] = useState(0);
   const slides = [
-    {label:"Vista aérea del proyecto",  grad:"linear-gradient(135deg,#2D4A3E 0%,#3D5C45 50%,#4a7a55 100%)"},
-    {label:"Atardecer sobre los lotes", grad:"linear-gradient(135deg,#6B3D28 0%,#8B5A3C 55%,#c4845c 100%)"},
-    {label:"Quinta terminada",          grad:"linear-gradient(135deg,#3D2418 0%,#6B3D28 65%,#8B5A3C 100%)"},
+    {label:"Guanacaste, Bagaces — vista aérea del proyecto", img:"images/drone-panoramica.jpg"},
+    {label:"Entorno natural con montañas al fondo",          img:"images/drone-entorno.jpg"},
+    {label:"Desarrollo con calles internas adoquinadas",     img:"images/drone-desarrollo.jpg"},
+    {label:"Acceso vehicular y lotificación",                img:"images/drone-acceso.jpg"},
   ];
   useEffect(()=>{const t=setInterval(()=>setActive(a=>(a+1)%slides.length),5000);return()=>clearInterval(t)},[]);
   return (
     <div style={{borderRadius:16,overflow:'hidden',position:'relative',aspectRatio:'4/3',boxShadow:'var(--sh-lg)'}}>
       {slides.map((s,i)=>(
-        <div key={i} style={{position:'absolute',inset:0,background:s.grad,opacity:i===active?1:0,transition:'opacity 1.2s ease',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',gap:8}}>
-          <div style={{fontSize:52,opacity:.18}}>🌿</div>
-          <span style={{color:'rgba(255,255,255,.65)',fontSize:12,fontFamily:'var(--font-b)',letterSpacing:'.06em'}}>{s.label}</span>
+        <div key={i} style={{position:'absolute',inset:0,opacity:i===active?1:0,transition:'opacity 1.2s ease'}}>
+          <img src={s.img} alt={s.label} style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
+          <div style={{position:'absolute',inset:0,background:'linear-gradient(to top,rgba(45,74,62,.55) 0%,transparent 55%)'}}/>
+          <span style={{position:'absolute',bottom:68,left:14,color:'rgba(255,255,255,.80)',fontSize:11,fontFamily:'var(--font-b)',letterSpacing:'.06em',textShadow:'0 1px 3px rgba(0,0,0,.4)'}}>{s.label}</span>
         </div>
       ))}
       {/* Lote destacado card */}
       <div style={{position:'absolute',bottom:12,left:12,right:12,background:'rgba(255,255,255,.96)',backdropFilter:'blur(8px)',borderRadius:10,padding:'12px 14px',display:'flex',alignItems:'center',justifyContent:'space-between',boxShadow:'var(--sh-md)'}}>
         <div>
           <div style={{fontSize:9,fontWeight:700,letterSpacing:'.12em',color:'var(--verde-bosque)',textTransform:'uppercase',marginBottom:2}}>Lote destacado</div>
-          <div style={{fontFamily:'var(--font-d)',fontWeight:600,fontSize:14,color:'var(--caoba-900)'}}>Lote Cedro — 820 m²</div>
-          <div className="tnum" style={{fontSize:13,color:'var(--caoba-700)',fontWeight:700}}>₡22,500,000</div>
+          <div style={{fontFamily:'var(--font-d)',fontWeight:600,fontSize:14,color:'var(--caoba-900)'}}>Lote 1 — 9.414 m²</div>
+          <div className="tnum" style={{fontSize:13,color:'var(--caoba-700)',fontWeight:700}}>Consultar precio</div>
         </div>
         <button className="btn-p" style={{height:36,fontSize:12,padding:'0 14px'}} onClick={()=>document.getElementById('lotes')?.scrollIntoView()}>
           Ver lote <span className="arr">→</span>
