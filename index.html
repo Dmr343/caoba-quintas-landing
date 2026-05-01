@@ -1020,13 +1020,23 @@ const LotSkeleton = () => (
 );
 
 /* ── LOT CARD ───────────────────────────────────────────────── */
+const CARD_PHOTOS = [
+  'images/drone-panoramica.jpg',
+  'images/drone-entorno.jpg',
+  'images/drone-desarrollo.jpg',
+  'images/drone-acceso.jpg',
+];
+
 const LotCard = ({lot}) => {
   const [fav, setFav] = useState(false);
+  const photo = CARD_PHOTOS[(lot.id - 1) % CARD_PHOTOS.length];
   return (
     <div className="lot-card">
-      {/* Imagen — aspect 4:3 */}
-      <div style={{position:'relative',aspectRatio:'4/3',background:lot.bg,overflow:'hidden'}}>
-        <div className="card-img"><div style={{fontSize:36,opacity:.16}}>🌿</div></div>
+      {/* Imagen — foto de drone + overlay de color de marca */}
+      <div style={{position:'relative',aspectRatio:'4/3',overflow:'hidden',background:lot.bg}}>
+        <img src={photo} alt={`Vista ${lot.name}`} style={{position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
+        <div style={{position:'absolute',inset:0,background:lot.bg,opacity:0.42}}/>
+
         {/* Badge disponibilidad — esquina sup-izq (Gestalt proximidad) */}
         <div style={{position:'absolute',top:10,left:10,background:lot.tag==='Disponible'?'var(--exito)':'#D4A017',color:'white',fontSize:11,fontWeight:700,padding:'3px 10px',borderRadius:20,letterSpacing:'.05em'}}>
           {lot.tag}
@@ -1140,27 +1150,51 @@ const LeafletMap = () => {
           || (Math.max(...lons) - Math.min(...lons)) * 111000 > 300;
     }
 
-    // Lot polygons
+    // Lotes disponibles: GeoJSON feature index → nombre en LOTS
+    const availableMap = {
+      70:'Lote 1', 57:'Lote 14', 54:'Lote 28',
+      74:'Lote 30', 72:'Lote 31', 61:'Lote 32',
+       3:'Lote 33',  2:'Lote 34',  0:'Lote 35',
+      59:'Lote 36', 60:'Lote 39'
+    };
+
     L.geoJSON(LOTS_GEO, {
       filter: f => !featureIsRoad(f),
-      style: {
-        fillColor: '#E87D3E',
-        fillOpacity: 0.25,
-        color: '#E87D3E',
-        weight: 2,
+      style: feature => {
+        const idx = LOTS_GEO.features.indexOf(feature);
+        const avail = idx in availableMap;
+        return avail
+          ? { fillColor:'#2F7D4F', fillOpacity:0.38, color:'#2F7D4F', weight:2.5 }
+          : { fillColor:'#888',    fillOpacity:0.18, color:'#666',     weight:1   };
       },
       onEachFeature: (feature, layer) => {
+        const idx = LOTS_GEO.features.indexOf(feature);
+        const lotName = availableMap[idx];
+        const lot = lotName ? LOTS.find(l => l.name === lotName) : null;
+        const avail = !!lot;
+
         layer.on({
-          mouseover: e => { e.target.setStyle({ fillOpacity: 0.45, weight: 3 }); },
-          mouseout:  e => { e.target.setStyle({ fillOpacity: 0.25, weight: 2 }); },
+          mouseover: e => e.target.setStyle({ fillOpacity: avail ? 0.58 : 0.28, weight: avail ? 3.5 : 1.5 }),
+          mouseout:  e => e.target.setStyle({ fillOpacity: avail ? 0.38 : 0.18, weight: avail ? 2.5 : 1   }),
           click: () => {
-            layer.bindPopup(
-              '<div style="font-family:Manrope,sans-serif;padding:4px 2px">' +
-              '<strong style="color:#3D2418">Lote disponible</strong><br/>' +
-              '<span style="font-size:12px;color:#6B6B6B">Caoba Quintas — Bagaces, Guanacaste</span><br/><br/>' +
-              '<a href="#hero-form" style="background:#E87D3E;color:white;padding:6px 14px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:700">Solicitar información →</a>' +
-              '</div>'
-            ).openPopup();
+            if (avail) {
+              layer.bindPopup(
+                `<div style="font-family:Manrope,sans-serif;min-width:190px;padding:4px 2px">` +
+                `<div style="font-size:10px;font-weight:700;letter-spacing:.1em;color:#2F7D4F;text-transform:uppercase;margin-bottom:6px">✓ Disponible</div>` +
+                `<div style="font-size:16px;font-weight:700;color:#3D2418;margin-bottom:2px">${lot.name}</div>` +
+                `<div style="font-size:14px;color:#6B3D28;font-weight:600;margin-bottom:2px">${lot.size}</div>` +
+                `<div style="font-size:12px;color:#6B6B6B;margin-bottom:6px">${lot.zone}</div>` +
+                `<div style="font-size:15px;font-weight:700;color:#E87D3E;margin-bottom:12px">${lot.price}</div>` +
+                `<a href="https://wa.me/50661541764?text=Hola%2C+me+interesa+${encodeURIComponent(lot.name+' ('+lot.size+')')}" ` +
+                `style="display:block;background:#25D366;color:white;padding:8px 14px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:700;text-align:center">` +
+                `WhatsApp →</a></div>`
+              ).openPopup();
+            } else {
+              layer.bindPopup(
+                `<div style="font-family:Manrope,sans-serif;padding:6px 8px;text-align:center">` +
+                `<span style="font-size:12px;font-weight:700;color:#888;letter-spacing:.08em">VENDIDO</span></div>`
+              ).openPopup();
+            }
           },
         });
       },
