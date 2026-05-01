@@ -1062,7 +1062,7 @@ const LotCard = ({lot}) => {
           ))}
         </div>
         <div style={{display:'flex',gap:8,borderTop:'1px solid rgba(61,36,24,.07)',paddingTop:12}}>
-          <button className="btn-s" style={{flex:1,justifyContent:'center',height:40,fontSize:13}}>Ver detalles <span className="arr">→</span></button>
+          <button className="btn-s" style={{flex:1,justifyContent:'center',height:40,fontSize:13}} onClick={()=>{window.dispatchEvent(new CustomEvent('seleccionar-lote',{detail:{name:lot.name,price:lot.price,size:lot.size}}));document.getElementById('contacto')?.scrollIntoView({behavior:'smooth'})}}>Ver detalles <span className="arr">→</span></button>
           <a href="https://wa.me/50661541764" className="btn-wa" style={{width:40,height:40,padding:0,justifyContent:'center',borderRadius:8,flexShrink:0}} aria-label="Consultar por WhatsApp"><Ic.WA size={18}/></a>
         </div>
       </div>
@@ -1418,15 +1418,23 @@ const CTAFinal = () => {
   const [phone, setPhone] = useState('');
   const [done, setDone] = useState(false);
   const [sending, setSending] = useState(false);
+  const [loteInfo, setLoteInfo] = useState(null);
+
+  useEffect(()=>{
+    const fn = e => setLoteInfo(e.detail);
+    window.addEventListener('seleccionar-lote', fn);
+    return ()=>window.removeEventListener('seleccionar-lote', fn);
+  }, []);
 
   const submitFinal = async () => {
     if (!name.trim() || !phone.trim()) return;
     setSending(true);
+    const fuente = loteInfo ? `lote_${loteInfo.name.replace(/\s+/g,'-').toLowerCase()}` : 'cta_final';
     try {
       await fetch('/api/leads', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nombre: name.trim(), telefono: phone.trim(), fuente: 'cta_final' }),
+        body: JSON.stringify({ nombre: name.trim(), telefono: phone.trim(), fuente }),
       });
     } catch (_) { /* silencioso — no bloquear UX */ }
     setSending(false);
@@ -1445,6 +1453,15 @@ const CTAFinal = () => {
         </p>
         {!done ? (
           <>
+          {loteInfo && (
+            <div style={{display:'inline-flex',alignItems:'center',gap:8,background:'rgba(255,255,255,.15)',borderRadius:20,padding:'6px 16px',fontSize:13,marginBottom:18,color:'var(--crema-arena)'}}>
+              <span style={{opacity:.7}}>Consultando sobre:</span>
+              <strong>{loteInfo.name}</strong>
+              <span style={{opacity:.6}}>·</span>
+              <span style={{opacity:.8}}>{loteInfo.size}</span>
+              <button onClick={()=>setLoteInfo(null)} style={{background:'none',border:'none',cursor:'pointer',color:'rgba(245,239,230,.55)',fontSize:14,lineHeight:1,padding:'0 0 0 4px'}} aria-label="Quitar">×</button>
+            </div>
+          )}
           <div style={{display:'flex',gap:10,marginBottom:14,flexWrap:'wrap',justifyContent:'center'}}>
             <input type="text" value={name} onChange={e=>setName(e.target.value)} placeholder="Tu nombre"
               style={{flex:1,minWidth:160,height:48,borderRadius:'var(--r)',border:'1.5px solid rgba(245,239,230,.25)',padding:'0 14px',fontSize:14,fontFamily:'var(--font-b)',background:'rgba(255,255,255,.1)',color:'var(--crema-arena)',outline:'none'}}

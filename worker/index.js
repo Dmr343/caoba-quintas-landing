@@ -10,10 +10,185 @@ export default {
       return handleLead(request, env);
     }
 
+    if (url.pathname === '/api/admin' || url.pathname === '/api/admin/') {
+      return handleAdmin(request, env);
+    }
+
+    if (url.pathname === '/api/admin/leads' && request.method === 'GET') {
+      return handleAdminLeads(request, env, 'json');
+    }
+
+    if (url.pathname === '/api/admin/leads.csv' && request.method === 'GET') {
+      return handleAdminLeads(request, env, 'csv');
+    }
+
     return new Response('Not found', { status: 404 });
   },
 };
 
+/* ── Auth helper ─────────────────────────────────────────────── */
+function checkAuth(request, env) {
+  const authHeader = request.headers.get('Authorization') || '';
+  if (!authHeader.startsWith('Basic ')) return false;
+
+  const decoded = atob(authHeader.slice(6));
+  const [user, pass] = decoded.split(':');
+  const expectedPass = env.ADMIN_PASSWORD || 'CQ_Admin_2026';
+  return user === 'admin' && pass === expectedPass;
+}
+
+function unauthorizedResponse() {
+  return new Response('Unauthorized', {
+    status: 401,
+    headers: { 'WWW-Authenticate': 'Basic realm="Caoba Quintas Admin"' },
+  });
+}
+
+/* ── Admin HTML dashboard ────────────────────────────────────── */
+async function handleAdmin(request, env) {
+  if (!checkAuth(request, env)) return unauthorizedResponse();
+
+  const { results } = await env.DB.prepare(
+    'SELECT id, nombre, telefono, fuente, created_at FROM leads ORDER BY created_at DESC LIMIT 500'
+  ).all();
+
+  const rows = results || [];
+  const total = rows.length;
+  const fuentes = rows.reduce((acc, r) => {
+    acc[r.fuente] = (acc[r.fuente] || 0) + 1;
+    return acc;
+  }, {});
+
+  const tableRows = rows.map(r => `
+    <tr>
+      <td>${r.id}</td>
+      <td>${esc(r.nombre)}</td>
+      <td><a href="https://wa.me/${r.telefono.replace(/\D/g, '')}" target="_blank">${esc(r.telefono)}</a></td>
+      <td><span class="badge ${r.fuente}">${esc(r.fuente)}</span></td>
+      <td>${r.created_at ? new Date(r.created_at).toLocaleString('es-CR') : '—'}</td>
+    </tr>`).join('');
+
+  const fuenteBadges = Object.entries(fuentes).map(([k, v]) =>
+    `<div class="stat-card"><div class="stat-num">${v}</div><div class="stat-lbl">${k}</div></div>`
+  ).join('');
+
+  const html = `<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Admin — Caoba Quintas</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f0ebe4;color:#2c1a0e;min-height:100vh}
+  header{background:#3D2418;color:#F5EFE6;padding:16px 32px;display:flex;align-items:center;justify-content:space-between}
+  header h1{font-size:18px;font-weight:700;letter-spacing:.02em}
+  header small{font-size:12px;opacity:.65}
+  .container{max-width:1100px;margin:0 auto;padding:32px 24px}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px;margin-bottom:32px}
+  .stat-card{background:white;border-radius:12px;padding:20px 16px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+  .stat-card.total .stat-num{color:#3D2418}
+  .stat-num{font-size:32px;font-weight:700;line-height:1}
+  .stat-lbl{font-size:12px;color:#888;margin-top:6px;text-transform:capitalize}
+  .toolbar{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
+  .toolbar input{flex:1;min-width:180px;height:38px;border:1.5px solid #ddd;border-radius:8px;padding:0 12px;font-size:13px;outline:none}
+  .toolbar input:focus{border-color:#6B3D28}
+  .btn{height:38px;padding:0 16px;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+  .btn-primary{background:#E87D3E;color:white}
+  .btn-primary:hover{background:#d06b2e}
+  .btn-outline{background:white;color:#3D2418;border:1.5px solid #ddd}
+  .btn-outline:hover{border-color:#6B3D28}
+  .table-wrap{background:white;border-radius:12px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th{background:#3D2418;color:#F5EFE6;padding:12px 14px;text-align:left;font-weight:600;font-size:11px;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
+  td{padding:11px 14px;border-bottom:1px solid #f0ede8;vertical-align:middle}
+  tr:last-child td{border-bottom:none}
+  tr:hover td{background:#faf7f3}
+  td a{color:#6B3D28;text-decoration:none;font-weight:500}
+  td a:hover{text-decoration:underline}
+  .badge{display:inline-block;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+  .badge.hero{background:#e8f4e8;color:#2D4A3E}
+  .badge.lotes{background:#fff3e8;color:#8B5A3C}
+  .badge.contacto{background:#e8eef8;color:#2d4870}
+  .badge.cta{background:#f8f0e8;color:#6B3D28}
+  .count-info{font-size:13px;color:#888;margin-bottom:8px}
+  @media(max-width:600px){th:nth-child(1),td:nth-child(1){display:none}.container{padding:16px}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Caoba Quintas — Panel de Leads</h1>
+  <small>caobaquintas.com</small>
+</header>
+<div class="container">
+  <div class="stats">
+    <div class="stat-card total"><div class="stat-num">${total}</div><div class="stat-lbl">Total leads</div></div>
+    ${fuenteBadges}
+  </div>
+  <div class="toolbar">
+    <input type="search" id="q" placeholder="Buscar por nombre o teléfono…" oninput="filtrar()"/>
+    <a class="btn btn-outline" href="/api/admin/leads.csv" download="leads-caoba.csv">⬇ Exportar CSV</a>
+    <a class="btn btn-primary" href="https://wa.me/50661541764" target="_blank">WhatsApp</a>
+  </div>
+  <div class="count-info" id="count-info">${total} leads</div>
+  <div class="table-wrap">
+    <table id="leads-table">
+      <thead><tr><th>#</th><th>Nombre</th><th>Teléfono</th><th>Fuente</th><th>Fecha</th></tr></thead>
+      <tbody id="tbody">${tableRows}</tbody>
+    </table>
+  </div>
+</div>
+<script>
+function filtrar(){
+  const q=(document.getElementById('q').value||'').toLowerCase();
+  const rows=document.querySelectorAll('#tbody tr');
+  let vis=0;
+  rows.forEach(r=>{
+    const txt=r.textContent.toLowerCase();
+    const show=!q||txt.includes(q);
+    r.style.display=show?'':'none';
+    if(show)vis++;
+  });
+  document.getElementById('count-info').textContent=vis+' leads'+(q?' (filtrados)':'');
+}
+</script>
+</body>
+</html>`;
+
+  return new Response(html, {
+    headers: { 'Content-Type': 'text/html;charset=utf-8' },
+  });
+}
+
+/* ── Admin API: leads JSON / CSV ─────────────────────────────── */
+async function handleAdminLeads(request, env, format) {
+  if (!checkAuth(request, env)) return unauthorizedResponse();
+
+  const { results } = await env.DB.prepare(
+    'SELECT id, nombre, telefono, fuente, created_at FROM leads ORDER BY created_at DESC'
+  ).all();
+
+  const rows = results || [];
+
+  if (format === 'csv') {
+    const lines = ['id,nombre,telefono,fuente,fecha'];
+    rows.forEach(r => {
+      lines.push([r.id, csvEsc(r.nombre), csvEsc(r.telefono), csvEsc(r.fuente), r.created_at || ''].join(','));
+    });
+    return new Response(lines.join('\n'), {
+      headers: {
+        'Content-Type': 'text/csv;charset=utf-8',
+        'Content-Disposition': 'attachment; filename="leads-caoba.csv"',
+      },
+    });
+  }
+
+  return new Response(JSON.stringify(rows), {
+    headers: { 'Content-Type': 'application/json' },
+  });
+}
+
+/* ── Lead submission ─────────────────────────────────────────── */
 async function handleLead(request, env) {
   let body;
   try {
@@ -39,7 +214,6 @@ async function handleLead(request, env) {
     return corsResponse({ error: 'Error guardando lead' }, 500);
   }
 
-  // Notificación por email (opcional — requiere RESEND_API_KEY en secrets)
   if (env.RESEND_API_KEY && env.NOTIFY_EMAIL) {
     await sendEmail(env, nombre, telefono, fuente).catch(e =>
       console.error('Email error:', e)
@@ -67,12 +241,23 @@ async function sendEmail(env, nombre, telefono, fuente) {
   });
 }
 
+/* ── Helpers ─────────────────────────────────────────────────── */
 function corsResponse(body, status) {
   const headers = {
     'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type',
     'Content-Type': 'application/json',
   };
   return new Response(body ? JSON.stringify(body) : null, { status, headers });
+}
+
+function esc(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function csvEsc(s) {
+  const str = String(s || '');
+  return str.includes(',') || str.includes('"') || str.includes('\n')
+    ? `"${str.replace(/"/g, '""')}"` : str;
 }
