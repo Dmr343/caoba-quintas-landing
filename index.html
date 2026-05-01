@@ -55,7 +55,7 @@ body{background-color:var(--crema-arena);background-image:url("data:image/svg+xm
 /* WhatsApp float */
 .wa-float{position:fixed;bottom:96px;right:20px;z-index:800;width:56px;height:56px;background:#25D366;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(37,211,102,.4);cursor:pointer;transition:transform .2s,box-shadow .2s;border:none;text-decoration:none;animation:waPulse 10s infinite}
 .wa-float:hover{transform:scale(1.1);box-shadow:0 6px 24px rgba(37,211,102,.55)}
-@media(max-width:768px){.wa-float{bottom:80px}}
+@media(max-width:768px){.wa-float{display:none}}
 @keyframes waPulse{0%,82%,100%{box-shadow:0 4px 16px rgba(37,211,102,.4)}88%{box-shadow:0 4px 16px rgba(37,211,102,.4),0 0 0 10px rgba(37,211,102,.13)}93%{box-shadow:0 4px 16px rgba(37,211,102,.4),0 0 0 18px rgba(37,211,102,.04)}}
 
 /* Sticky mobile CTA */
@@ -139,6 +139,7 @@ a.link-wa:hover{text-decoration:underline}
 .grid-50{display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:center}
 @media(max-width:960px){.grid-3{grid-template-columns:1fr 1fr}.grid-60-40{grid-template-columns:1fr;gap:32px}.grid-50{grid-template-columns:1fr}}
 @media(max-width:600px){.grid-3{grid-template-columns:1fr}.grid-2{grid-template-columns:1fr}nav.desk-nav{display:none!important}.desk-ctas{display:none!important}}
+@media(max-width:768px){.hero-carousel{aspect-ratio:16/9!important}}
 </style>
 </head>
 <body>
@@ -701,7 +702,7 @@ const HeroCarousel = () => {
   ];
   useEffect(()=>{const t=setInterval(()=>setActive(a=>(a+1)%slides.length),5000);return()=>clearInterval(t)},[]);
   return (
-    <div style={{borderRadius:16,overflow:'hidden',position:'relative',aspectRatio:'4/3',boxShadow:'var(--sh-lg)'}}>
+    <div className="hero-carousel" style={{borderRadius:16,overflow:'hidden',position:'relative',aspectRatio:'4/3',boxShadow:'var(--sh-lg)'}}>
       {slides.map((s,i)=>(
         <div key={i} style={{position:'absolute',inset:0,opacity:i===active?1:0,transition:'opacity 1.2s ease'}}>
           <img src={s.img} alt={s.label} style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
@@ -1087,7 +1088,7 @@ const LotsSection = () => {
           </h2>
           {/* Escasez — Cialdini: dato real visible */}
           <span style={{fontSize:14,color:'var(--gris)',background:'rgba(47,125,79,.08)',border:'1px solid rgba(47,125,79,.2)',borderRadius:20,padding:'4px 12px',fontWeight:600,color:'var(--exito)'}}>
-            {avail} de {LOTS.length} lotes disponibles
+            {avail} lotes disponibles
           </span>
         </div>
         {/* Skeletons mientras carga (spec sec 7) */}
@@ -1457,9 +1458,6 @@ const CTAFinal = () => {
             <button className="btn-p" style={{height:52,fontSize:15}} onClick={submitFinal} disabled={sending}>
               {sending ? 'Enviando…' : <>Agendar visita guiada <span className="arr">→</span></>}
             </button>
-            <a href="https://wa.me/50661541764" className="btn-wa" style={{height:52,fontSize:14}}>
-              <Ic.WA/> WhatsApp
-            </a>
           </div>
           </>
         ) : (
@@ -1483,11 +1481,8 @@ const Footer = () => (
     <div className="container">
       <div style={{display:'grid',gridTemplateColumns:'2fr 1fr 1fr',gap:32,marginBottom:32}}>
         <div>
-          <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:12}}>
-            <div style={{width:32,height:32,background:'var(--caoba-700)',borderRadius:7,display:'flex',alignItems:'center',justifyContent:'center'}}>
-              <span style={{color:'white',fontFamily:'var(--font-d)',fontWeight:700,fontSize:15}}>C</span>
-            </div>
-            <span style={{fontFamily:'var(--font-d)',fontWeight:700,fontSize:16,color:'var(--crema-arena)'}}>Caoba Quintas</span>
+          <div style={{marginBottom:16}}>
+            <img src="images/logo_v2_crema.png" alt="Caoba Quintas" style={{height:56,width:'auto',display:'block'}}/>
           </div>
           <p style={{fontSize:13,lineHeight:1.85,maxWidth:260}}>Desarrollo de lotes en Bagaces, Guanacaste, Costa Rica. Construí donde siempre quisiste.</p>
         </div>
@@ -1512,7 +1507,7 @@ const Footer = () => (
         <div style={{fontSize:12}}>© 2024 Caoba Quintas. Todos los derechos reservados.</div>
       </div>
     </div>
-    <style>{`@media(max-width:600px){footer .container>div:first-child{grid-template-columns:1fr!important}}`}</style>
+    <style>{`@media(max-width:768px){footer .container>div:first-child{grid-template-columns:1fr!important}}`}</style>
   </footer>
 );
 
