@@ -615,6 +615,25 @@ Object.assign(window, {
 <script type="text/babel">
 const { useState, useEffect, useRef, useCallback } = React;
 
+/* ── WHATSAPP ─────────────────────────────────────────────────── */
+const WA_NUM  = '50661541764';
+const WA_MSG  = encodeURIComponent('Hola! Me interesa información sobre los lotes de Caoba Quintas.');
+const WA_URL  = `https://wa.me/${WA_NUM}?text=${WA_MSG}`;
+
+const waUrlForLot = (lot) => lot
+  ? `https://wa.me/${WA_NUM}?text=${encodeURIComponent(`Hola! Me interesa el ${lot.name} (${lot.size}) en Caoba Quintas.`)}`
+  : WA_URL;
+
+const useWaUrl = () => {
+  const [url, setUrl] = useState(WA_URL);
+  useEffect(()=>{
+    const fn = e => setUrl(waUrlForLot(e.detail));
+    window.addEventListener('seleccionar-lote', fn);
+    return ()=>window.removeEventListener('seleccionar-lote', fn);
+  }, []);
+  return url;
+};
+
 /* ── DATA ─────────────────────────────────────────────────────── */
 const LOTS = [
   { id:1,  name:"Lote 1",  price:"Consultar precio", size:"9.414 m²", tag:"Disponible", zone:"Sector Sur",     features:["Agua y luz","El más amplio del proyecto","Acceso directo vial"],  bg:"#2D4A3E" },
@@ -677,7 +696,7 @@ const SuccessAnim = () => (
       <path className="check-path" d="M18 33 l10 10 l18-20" fill="none" stroke="var(--exito)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>
     <div style={{fontWeight:700,fontSize:16,color:'var(--exito)'}}>¡Recibido! Te contactamos en menos de 24 horas.</div>
-    <p style={{fontSize:14,color:'var(--gris)',textAlign:'center'}}>¿Querés respuesta más rápida? <a href="https://wa.me/50661541764" className="link-wa">Escribinos por WhatsApp →</a></p>
+    <p style={{fontSize:14,color:'var(--gris)',textAlign:'center'}}>¿Querés respuesta más rápida? <a href={WA_URL} className="link-wa">Escribinos por WhatsApp →</a></p>
   </div>
 );
 
@@ -768,7 +787,7 @@ const Navbar = () => {
 
         {/* Desktop CTAs */}
         <div className="desk-ctas" style={{display:'flex',alignItems:'center',gap:10}}>
-          <a href="https://wa.me/50661541764" className="btn-wa" style={{height:40,padding:'0 14px'}} aria-label="WhatsApp">
+          <a href={WA_URL} className="btn-wa" style={{height:40,padding:'0 14px'}} aria-label="WhatsApp">
             <Ic.WA size={18}/><span style={{fontSize:13}}>WhatsApp</span>
           </a>
           <button className="btn-p" style={{height:40,fontSize:14}} onClick={()=>document.getElementById('hero-form')?.scrollIntoView()}>
@@ -778,7 +797,7 @@ const Navbar = () => {
 
         {/* Mobile right group */}
         <div style={{display:'none'}} className="mob-right">
-          <a href="https://wa.me/50661541764" aria-label="WhatsApp" style={{width:40,height:40,display:'flex',alignItems:'center',justifyContent:'center',background:'#25D366',borderRadius:8,textDecoration:'none'}}>
+          <a href={WA_URL} aria-label="WhatsApp" style={{width:40,height:40,display:'flex',alignItems:'center',justifyContent:'center',background:'#25D366',borderRadius:8,textDecoration:'none'}}>
             <Ic.WA size={18}/>
           </a>
           <button onClick={()=>setDrawerOpen(true)} aria-label="Abrir menú" style={{width:40,height:40,display:'flex',alignItems:'center',justifyContent:'center',background:'none',border:'none',cursor:'pointer',color:'var(--caoba-900)'}}>
@@ -808,7 +827,7 @@ const Navbar = () => {
         <button className="btn-p" style={{width:'100%',justifyContent:'center',marginBottom:12}} onClick={()=>{setDrawerOpen(false);document.getElementById('hero-form')?.scrollIntoView()}}>
           Solicitar información <span className="arr">→</span>
         </button>
-        <a href="https://wa.me/50661541764" className="btn-wa" style={{width:'100%',justifyContent:'center'}}>
+        <a href={WA_URL} className="btn-wa" style={{width:'100%',justifyContent:'center'}}>
           <Ic.WA/> WhatsApp
         </a>
         <div style={{marginTop:'auto',paddingTop:32,borderTop:'1px solid rgba(61,36,24,.1)',fontSize:13,color:'var(--gris)'}}>
@@ -1063,7 +1082,7 @@ const LotCard = ({lot}) => {
         </div>
         <div style={{display:'flex',gap:8,borderTop:'1px solid rgba(61,36,24,.07)',paddingTop:12}}>
           <button className="btn-s" style={{flex:1,justifyContent:'center',height:40,fontSize:13}} onClick={()=>{window.dispatchEvent(new CustomEvent('seleccionar-lote',{detail:{name:lot.name,price:lot.price,size:lot.size}}));document.getElementById('contacto')?.scrollIntoView({behavior:'smooth'})}}>Ver detalles <span className="arr">→</span></button>
-          <a href="https://wa.me/50661541764" className="btn-wa" style={{width:40,height:40,padding:0,justifyContent:'center',borderRadius:8,flexShrink:0}} aria-label="Consultar por WhatsApp"><Ic.WA size={18}/></a>
+          <a href={waUrlForLot(lot)} className="btn-wa" style={{width:40,height:40,padding:0,justifyContent:'center',borderRadius:8,flexShrink:0}} aria-label="Consultar por WhatsApp"><Ic.WA size={18}/></a>
         </div>
       </div>
     </div>
@@ -1484,7 +1503,7 @@ const CTAFinal = () => {
               <path className="check-path" d="M18 33 l10 10 l18-20" fill="none" stroke="var(--crema-arena)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
             <div style={{fontWeight:700,fontSize:16}}>¡Agendado! Te contactamos a la brevedad.</div>
-            <div style={{fontSize:14,opacity:.75}}>¿Querés confirmar antes? <a href="https://wa.me/50661541764" style={{color:'#7fffb0',fontWeight:600}}>WhatsApp →</a></div>
+            <div style={{fontSize:14,opacity:.75}}>¿Querés confirmar antes? <a href={WA_URL} style={{color:'#7fffb0',fontWeight:600}}>WhatsApp →</a></div>
           </div>
         )}
       </div>
@@ -1582,6 +1601,22 @@ const BackToTop = () => {
   );
 };
 
+/* ── WA FLOTANTE + MOB BAR ──────────────────────────────────── */
+const WaFloatAndBar = () => {
+  const waUrl = useWaUrl();
+  return (
+    <>
+      <a href={waUrl} className="wa-float" aria-label="Contactar por WhatsApp"><Ic.WA size={26}/></a>
+      <div className="mob-bar">
+        <button className="btn-p" style={{flex:1,justifyContent:'center',height:52,fontSize:14}} onClick={()=>document.getElementById('contacto')?.scrollIntoView()}>
+          Solicitar información <span className="arr">→</span>
+        </button>
+        <a href={waUrl} className="wa-icon" aria-label="WhatsApp"><Ic.WA size={20}/></a>
+      </div>
+    </>
+  );
+};
+
 /* ── APP ────────────────────────────────────────────────────── */
 const App = () => {
   useScrollReveal();
@@ -1601,19 +1636,11 @@ const App = () => {
       </main>
       <Footer/>
 
-      {/* WhatsApp flotante — animación de pulso c/10s (spec sec 5.11) */}
-      <a href="https://wa.me/50661541764" className="wa-float" aria-label="Contactar por WhatsApp"><Ic.WA size={26}/></a>
+      {/* WhatsApp flotante + barra móvil — URL dinámica según lote seleccionado */}
+      <WaFloatAndBar/>
 
       {/* Botón volver arriba — aparece tras 800px de scroll (spec sec 5.11) */}
       <BackToTop/>
-
-      {/* Sticky mobile CTA — 100% ancho, always accesible con pulgar (Fitts, spec sec 5.11 + 8) */}
-      <div className="mob-bar">
-        <button className="btn-p" style={{flex:1,justifyContent:'center',height:52,fontSize:14}} onClick={()=>document.getElementById('contacto')?.scrollIntoView()}>
-          Solicitar información <span className="arr">→</span>
-        </button>
-        <a href="https://wa.me/50661541764" className="wa-icon" aria-label="WhatsApp"><Ic.WA size={20}/></a>
-      </div>
 
       <TweaksWrapper/>
     </>
