@@ -1,6 +1,20 @@
 # Bitácora — caoba_landing_page
 
 
+## 2026-05-04 | 23:22
+
+**Resumen:** Se implementó un Worker de WhatsApp bot (`caoba-bot`) con flujo conversacional de 3 pasos y soporte para los proveedores Evolution API y Meta, conectado a la base de datos D1 existente.
+
+**Cambios:**
+- Creado `worker/bot.js` con lógica de re-engagement a 30 días y adaptador dual Evolution/Meta
+- Creado `wrangler.bot.toml` como configuración independiente del Worker de bot
+- Aplicada migración `migrations/0002_wa_sessions.sql` que añade tabla `wa_sessions` a D1
+- Desplegado `caoba-bot` en `caoba-bot.berrocal-dbp.workers.dev` (health check OK)
+
+**Archivos clave:** `worker/bot.js`, `wrangler.bot.toml`, `migrations/0002_wa_sessions.sql`
+
+---
+
 ## 2026-04-30 | 18:35
 
 **Resumen:** Se implementó el mapa interactivo por lote con polígonos clicables y se actualizaron las tarjetas con fotos reales de drone como fondo.
