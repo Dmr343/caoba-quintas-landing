@@ -1,6 +1,16 @@
 # Bitácora — caoba_landing_page
 
 
+## 2026-05-05 | 17:01
+
+**Resumen:** Sesión de consulta técnica para configurar la ruta del webhook de WhatsApp en el Worker de Cloudflare (`caoba-bot`).
+
+**Cambios:**
+- Identificada la ubicación correcta en el dashboard de Cloudflare para añadir rutas a un Worker: Workers & Pages → `caoba-bot` → Settings → Domains & Routes
+- Definido el endpoint de salud `/webhook/wa/health` como punto de verificación del despliegue
+
+---
+
 ## 2026-05-04 | 23:22
 
 **Resumen:** Se implementó un Worker de WhatsApp bot (`caoba-bot`) con flujo conversacional de 3 pasos y soporte para los proveedores Evolution API y Meta, conectado a la base de datos D1 existente.
