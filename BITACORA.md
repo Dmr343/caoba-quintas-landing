@@ -1,6 +1,14 @@
 # Bitácora — caoba_landing_page
 
 
+## 2026-05-06 | 11:58
+
+**Resumen:** Sesión de diagnóstico para integrar un bot de WhatsApp con Evolution API, identificando los datos de acceso necesarios para conectar la instancia.
+
+**Archivos clave:** `worker/bot.js`, `wrangler.bot.toml`
+
+---
+
 ## 2026-05-05 | 17:01
 
 **Resumen:** Sesión de consulta técnica para configurar la ruta del webhook de WhatsApp en el Worker de Cloudflare (`caoba-bot`).
