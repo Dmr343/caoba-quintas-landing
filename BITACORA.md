@@ -1,6 +1,14 @@
 # Bitácora — caoba_landing_page
 
 
+## 2026-05-07 | 09:54
+
+**Resumen:** Se diagnosticó un error de autenticación con la API de Cloudflare causado por un token revocado o expirado, bloqueando la ejecución de migraciones D1 y el deploy del Worker.
+
+**Archivos clave:** `credenciales_caoba.md`
+
+---
+
 ## 2026-05-06 | 11:58
 
 **Resumen:** Sesión de diagnóstico para integrar un bot de WhatsApp con Evolution API, identificando los datos de acceso necesarios para conectar la instancia.
