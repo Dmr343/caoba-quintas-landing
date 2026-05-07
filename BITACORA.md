@@ -1,6 +1,21 @@
 # Bitácora — caoba_landing_page
 
 
+## 2026-05-07 | 10:43
+
+**Resumen:** Se implementó y puso en producción un bot de WhatsApp para captura de leads de Caoba Quintas usando Cloudflare Workers y EvolutionAPI.
+
+**Cambios:**
+- Creado Worker `caoba-bot` con flujo conversacional de 3 pasos: nombre → cédula → disponibilidad
+- Al completar el flujo, el lead se guarda en D1 vía `/api/admin` con `fuente=wa_bot`
+- Se implementó notificación automática al asesor (`+506 8516-4626`) con los datos del cliente
+- Se agregó lógica de re-engagement: números que ya completaron el flujo reciben mensaje de espera por 30 días
+- Se identificó y resolvió issue de sesiones internas de EvolutionBot que bloqueaban el trigger
+
+**Archivos clave:** `caoba-bot/index.js`
+
+---
+
 ## 2026-05-07 | 09:54
 
 **Resumen:** Se diagnosticó un error de autenticación con la API de Cloudflare causado por un token revocado o expirado, bloqueando la ejecución de migraciones D1 y el deploy del Worker.
