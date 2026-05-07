@@ -1,0 +1,21 @@
+name = "caoba-bot"
+main = "worker/bot.js"
+compatibility_date = "2025-01-01"
+routes = [{ pattern = "caobaquintas.com/webhook/wa*", zone_name = "caobaquintas.com" }]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "caoba-leads"
+database_id = "9a64e966-57d7-4bc2-a281-6fb103253a16"
+
+[vars]
+WA_TRIGGER = "info"
+SESSION_TTL_DAYS = "30"
+# Secrets (configurar con: npx wrangler secret put <KEY> --config wrangler.bot.toml):
+# WA_PROVIDER   — "evolution" | "meta"
+# WA_API_URL    — URL base de la API (ej: https://evolution.pujolbadi.com)
+# WA_API_TOKEN  — Token / Bearer de autenticación
+# WA_INSTANCE   — Nombre de instancia (solo Evolution API)
+# WA_PHONE_ID   — Phone number ID (solo Meta Cloud API)
+# BOT_WA_NUM    — Número del bot que recibe (solo Meta, para verificación)
+# NOTIFY_WA_NUM — Número interno del asesor que recibe el resumen (formato: 506XXXXXXXX)
