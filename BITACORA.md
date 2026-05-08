@@ -1,6 +1,18 @@
 # Bitácora — caoba_landing_page
 
 
+## 2026-05-08 | 12:12
+
+**Resumen:** Revisión del estado del proyecto tras implementar pre-fill automático de "info" en todos los botones de WhatsApp de la landing page.
+
+**Cambios:**
+- Pre-fill del mensaje "info" en CTAs principales, popup del mapa, FAQs y sección de financiamiento
+- Bot de WhatsApp (caoba-bot Worker) integrado para responder automáticamente al recibir "info"
+
+**Archivos clave:** `index.html`
+
+---
+
 ## 2026-05-07 | 10:43
 
 **Resumen:** Se implementó y puso en producción un bot de WhatsApp para captura de leads de Caoba Quintas usando Cloudflare Workers y EvolutionAPI.
