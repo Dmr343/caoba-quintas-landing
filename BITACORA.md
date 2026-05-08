@@ -1,6 +1,20 @@
 # Bitácora — caoba_landing_page
 
 
+## 2026-05-08 | 13:16
+
+**Resumen:** Se mejoró el bot de WhatsApp para usar triggers por coincidencia parcial (`contains`) y mensajes con lenguaje más natural.
+
+**Cambios:**
+- Cambio de trigger exacto a `contains` para mayor flexibilidad en detección de palabras clave
+- Reescritura de respuestas del bot con tono conversacional y menos robótico
+- Se pre-llenó el campo 'info' en todos los enlaces de WhatsApp de la landing
+- Creación de issue en GitHub documentando mejoras pendientes al bot
+
+**Archivos clave:** `caoba-bot/index.js`
+
+---
+
 ## 2026-05-08 | 12:12
 
 **Resumen:** Revisión del estado del proyecto tras implementar pre-fill automático de "info" en todos los botones de WhatsApp de la landing page.
