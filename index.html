@@ -617,12 +617,10 @@ const { useState, useEffect, useRef, useCallback } = React;
 
 /* ── WHATSAPP ─────────────────────────────────────────────────── */
 const WA_NUM  = '50661541764';
-const WA_MSG  = encodeURIComponent('Hola! Me interesa información sobre los lotes de Caoba Quintas.');
+const WA_MSG  = 'info';
 const WA_URL  = `https://wa.me/${WA_NUM}?text=${WA_MSG}`;
 
-const waUrlForLot = (lot) => lot
-  ? `https://wa.me/${WA_NUM}?text=${encodeURIComponent(`Hola! Me interesa el ${lot.name} (${lot.size}) en Caoba Quintas.`)}`
-  : WA_URL;
+const waUrlForLot = (lot) => `https://wa.me/${WA_NUM}?text=info`;
 
 const useWaUrl = () => {
   const [url, setUrl] = useState(WA_URL);
@@ -1205,7 +1203,7 @@ const LeafletMap = () => {
                 `<div style="font-size:14px;color:#6B3D28;font-weight:600;margin-bottom:2px">${lot.size}</div>` +
                 `<div style="font-size:12px;color:#6B6B6B;margin-bottom:6px">${lot.zone}</div>` +
                 `<div style="font-size:15px;font-weight:700;color:#E87D3E;margin-bottom:12px">${lot.price}</div>` +
-                `<a href="https://wa.me/50661541764?text=Hola%2C+me+interesa+${encodeURIComponent(lot.name+' ('+lot.size+')')}" ` +
+                `<a href="https://wa.me/50661541764?text=info" ` +
                 `style="display:block;background:#25D366;color:white;padding:8px 14px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:700;text-align:center">` +
                 `WhatsApp →</a></div>`
               ).openPopup();
@@ -1346,7 +1344,7 @@ const FAQ = () => {
                 <p style={{fontSize:14,color:'var(--gris)',lineHeight:1.85,marginBottom:10}}>{f.a}</p>
                 {/* Micro-CTA en cada respuesta — terciario + WhatsApp (spec sec 5.8) */}
                 <p style={{fontSize:13,color:'var(--gris)'}}>
-                  ¿Más dudas? <a href={`https://wa.me/50661541764?text=${encodeURIComponent(f.wa)}`} className="link-wa">Hablemos por WhatsApp →</a>
+                  ¿Más dudas? <a href="https://wa.me/50661541764?text=info" className="link-wa">Hablemos por WhatsApp →</a>
                 </p>
               </div>
             </div>
@@ -1418,7 +1416,7 @@ const Financiamiento = () => {
         {/* Micro-CTA textual */}
         <p style={{textAlign:'center',fontSize:14,color:'var(--gris)'}}>
           ¿Querés saber tu cuota mensual estimada?{' '}
-          <a href="https://wa.me/50661541764?text=Quiero%20saber%20mi%20cuota%20mensual%20estimada" className="link-wa">
+          <a href="https://wa.me/50661541764?text=info" className="link-wa">
             Preguntanos por WhatsApp →
           </a>
         </p>
