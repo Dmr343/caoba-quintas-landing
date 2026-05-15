@@ -1,6 +1,19 @@
 # Bitácora — caoba_landing_page
 
 
+## 2026-05-15 | 11:37
+
+**Resumen:** Sesión de planificación para reorganizar `~/Documents`, agrupando los proyectos de Grupo Pujol (incluido `caoba_landing_page`) bajo una carpeta común `work/grupo_pujol/`.
+
+**Cambios:**
+- Definida la ruta destino del proyecto: `~/Documents/work/caoba_landing_page/` → `~/Documents/work/grupo_pujol/caoba_landing_page/`.
+- Identificadas referencias a paths antiguos en `BITACORA.md` de repos hermanos que requieren commit+push previo al `mv`.
+- Confirmado que `.claude/settings.local.json` está gitignored y no ensucia el repo al editarse.
+
+**Archivos clave:** `BITACORA.md`
+
+---
+
 ## 2026-05-08 | 13:16
 
 **Resumen:** Se mejoró el bot de WhatsApp para usar triggers por coincidencia parcial (`contains`) y mensajes con lenguaje más natural.
