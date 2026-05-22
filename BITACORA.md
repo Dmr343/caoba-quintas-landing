@@ -1,6 +1,21 @@
 # Bitácora — caoba_landing_page
 
 
+## 2026-05-22 | 01:34
+
+**Resumen:** Se rediseñó la arquitectura del bot de WhatsApp (RFC #13) y se extrajo su lógica a un núcleo puro y testeado con TDD.
+
+**Cambios:**
+- Nuevo `worker/engine.js`: función pura `decide()` sin I/O ni dependencias de tiempo, más el servicio `runEngine` que garantiza el orden enviar→confirmar.
+- Refactor de `worker/bot.js`: eliminada la lógica duplicada; ahora importa de `engine.js` y solo arma adaptadores (sesión, envío, dedup, efectos), reduciendo el archivo en 182 líneas.
+- Agregadas 15 pruebas (`engine.test.js` + `run-engine.test.js`) cubriendo triggers, validaciones, TTL y liberación de dedup ante fallos de envío.
+- `package.json` con runner nativo `node --test` (sin dependencias nuevas).
+- Mejora de resiliencia: si falla guardar la sesión, el lead y la notificación se ejecutan igualmente para no perder captura de leads.
+
+**Archivos clave:** `worker/engine.js`, `worker/bot.js`, `worker/engine.test.js`, `worker/run-engine.test.js`, `package.json`
+
+---
+
 ## 2026-05-22 | 00:48
 
 **Resumen:** Revisión de código del bot de WhatsApp (Worker `bot.js`) que identificó 7 hallazgos, descartando como falsos positivos los supuestos "espacios faltantes" en JSX y el cambio intencional a mensaje genérico de WhatsApp.
