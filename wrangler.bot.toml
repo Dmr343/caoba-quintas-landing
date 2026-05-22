@@ -19,3 +19,8 @@ SESSION_TTL_DAYS = "30"
 # WA_PHONE_ID   — Phone number ID (solo Meta Cloud API)
 # BOT_WA_NUM    — Número del bot que recibe (solo Meta, para verificación)
 # NOTIFY_WA_NUM — Número interno del asesor que recibe el resumen (formato: 506XXXXXXXX)
+# WA_VERIFY_TOKEN — Token de verificación del webhook (GET hub.verify_token). Solo Meta.
+#                   Debe coincidir con el configurado en el panel de Meta. NO reutilizar WA_API_TOKEN.
+# WA_APP_SECRET   — App Secret de Meta, para verificar la firma HMAC X-Hub-Signature-256 del POST. Solo Meta.
+# WA_WEBHOOK_SECRET — Secreto compartido para autenticar el webhook (otros proveedores).
+#                     Enviar en header `x-webhook-secret` o query `?secret=`. Si no se configura, el POST queda SIN verificar.

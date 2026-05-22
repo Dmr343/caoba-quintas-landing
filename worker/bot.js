@@ -17,6 +17,10 @@ Un asesor se pondrá en contacto contigo pronto.`;
 
 const MSG_FALLBACK = `No entendí tu mensaje. Si deseas información sobre Caoba Quintas, escribe *info* para comenzar.`;
 
+const MSG_RETRY_NOMBRE = `No alcancé a leer tu nombre. ¿Me lo compartes, por favor?`;
+const MSG_RETRY_CEDULA = `Necesito un número de cédula válido para continuar. ¿Me lo compartes?`;
+const MSG_RETRY_DISP = `¿Cuándo estarías disponible para que te llamemos? (Ej: lunes en la tarde)`;
+
 /* ── Router principal ────────────────────────────────────────── */
 export default {
   async fetch(request, env) {
@@ -44,17 +48,77 @@ function handleMetaVerify(url, env) {
   const mode = url.searchParams.get('hub.mode');
   const token = url.searchParams.get('hub.verify_token');
   const challenge = url.searchParams.get('hub.challenge');
-  if (mode === 'subscribe' && token === (env.WA_API_TOKEN || '')) {
+  // Token dedicado de verificación (NO reutilizar WA_API_TOKEN, que es la
+  // credencial de la API). Si no está configurado, rechazar (fail-closed).
+  const expected = env.WA_VERIFY_TOKEN;
+  if (mode === 'subscribe' && expected && token === expected) {
     return new Response(challenge, { status: 200 });
   }
   return new Response('Forbidden', { status: 403 });
 }
 
+/* ── Autenticación del webhook entrante (POST) ───────────────── */
+// Devuelve true si la petición es legítima. Meta: firma HMAC X-Hub-Signature-256
+// sobre el cuerpo crudo con WA_APP_SECRET. Otros proveedores: secreto compartido
+// en header `x-webhook-secret` (o query `?secret=`) contra WA_WEBHOOK_SECRET.
+async function verifyWebhook(request, rawBody, url, env) {
+  const provider = env.WA_PROVIDER || '';
+
+  if (provider === 'meta') {
+    const secret = env.WA_APP_SECRET;
+    if (!secret) {
+      console.warn('WA_APP_SECRET no configurado: webhook Meta sin verificar.');
+      return true; // no bloquear el go-live; configurar el secreto cuanto antes
+    }
+    const header = request.headers.get('x-hub-signature-256') || '';
+    const expected = 'sha256=' + (await hmacSha256Hex(secret, rawBody));
+    return timingSafeEqual(header, expected);
+  }
+
+  const secret = env.WA_WEBHOOK_SECRET;
+  if (!secret) {
+    console.warn('WA_WEBHOOK_SECRET no configurado: webhook sin verificar.');
+    return true;
+  }
+  const provided = request.headers.get('x-webhook-secret') || url.searchParams.get('secret') || '';
+  return timingSafeEqual(provided, secret);
+}
+
+async function hmacSha256Hex(secret, message) {
+  const enc = new TextEncoder();
+  const key = await crypto.subtle.importKey(
+    'raw', enc.encode(secret), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']
+  );
+  const sig = await crypto.subtle.sign('HMAC', key, enc.encode(message));
+  return [...new Uint8Array(sig)].map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+// Comparación en tiempo constante para evitar fugas por timing.
+function timingSafeEqual(a, b) {
+  if (a.length !== b.length) return false;
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return diff === 0;
+}
+
 /* ── Procesador de mensajes entrantes ────────────────────────── */
 async function handleIncoming(request, env) {
+  const url = new URL(request.url);
+  // Leer el cuerpo crudo (necesario para verificar la firma HMAC de Meta).
+  let rawBody;
+  try {
+    rawBody = await request.text();
+  } catch {
+    return new Response('Bad request', { status: 400 });
+  }
+
+  if (!(await verifyWebhook(request, rawBody, url, env))) {
+    return new Response('Forbidden', { status: 403 });
+  }
+
   let payload;
   try {
-    payload = await request.json();
+    payload = JSON.parse(rawBody);
   } catch {
     return new Response('Bad request', { status: 400 });
   }
@@ -65,7 +129,8 @@ async function handleIncoming(request, env) {
   const { phone, text, messageId } = msg;
   const trigger = (env.WA_TRIGGER || 'info').toLowerCase();
 
-  // Idempotencia: ignorar reintentos del proveedor con el mismo messageId
+  // Idempotencia: reclamar el messageId antes de procesar para evitar
+  // doble procesamiento de reintentos concurrentes del proveedor.
   if (messageId) {
     try {
       const result = await env.DB.prepare(
@@ -75,34 +140,86 @@ async function handleIncoming(request, env) {
     } catch (err) {
       console.error('Dedup error:', err);
     }
-  }
-
-  try {
-    const responseText = await processMessage(phone, text, trigger, env);
-    if (responseText) {
-      // Enviar respuesta vía API (patrón confirmado en cobros bot)
-      await sendTextDirect(phone, responseText, env);
-      // También devolver en body para EvolutionBot por si lo usa
-      return json({ data: { message: responseText } });
+    // Limpieza oportunista: el dedup solo necesita cubrir los reintentos del
+    // proveedor (minutos), así que purgamos filas viejas para que la tabla no
+    // crezca sin límite. Probabilístico para no añadir costo en cada mensaje.
+    if (Math.random() < 0.02) {
+      try {
+        await env.DB.prepare(
+          "DELETE FROM wa_inbound WHERE received_at < datetime('now', '-7 days')"
+        ).run();
+      } catch (err) {
+        console.error('Dedup cleanup error:', err);
+      }
     }
-  } catch (err) {
-    console.error('Bot error:', err);
   }
 
+  // processMessage es PURO: calcula la respuesta y deja el avance de estado
+  // pendiente en `commit`, que solo se ejecuta tras un envío exitoso. Así, si
+  // el envío falla y el proveedor reintenta, el flujo no avanza dos veces.
+  let plan;
+  try {
+    plan = await processMessage(phone, text, trigger, env);
+  } catch (err) {
+    console.error('Bot error (process):', err);
+    await releaseDedup(env.DB, messageId);
+    return new Response('Error', { status: 500 });
+  }
+
+  const { reply, commit } = plan;
+
+  if (reply) {
+    try {
+      // Enviar respuesta vía API (patrón confirmado en cobros bot)
+      await sendTextDirect(phone, reply, env);
+    } catch (err) {
+      console.error('Bot error (send):', err);
+      // Liberar la marca para permitir el reintento del proveedor.
+      await releaseDedup(env.DB, messageId);
+      return new Response('Error', { status: 500 });
+    }
+  }
+
+  // Envío al usuario confirmado: ahora sí persistimos el avance de estado.
+  if (commit) {
+    try {
+      await commit();
+    } catch (err) {
+      console.error('Bot error (commit):', err);
+    }
+  }
+
+  // También devolver en body para EvolutionBot por si lo usa
+  if (reply) return json({ data: { message: reply } });
   return new Response('OK', { status: 200 });
 }
 
+// Libera la marca de dedup para que un reintento del proveedor pueda reprocesarse.
+async function releaseDedup(db, messageId) {
+  if (!messageId) return;
+  try {
+    await db.prepare('DELETE FROM wa_inbound WHERE message_id = ?').bind(messageId).run();
+  } catch (err) {
+    console.error('Dedup rollback error:', err);
+  }
+}
+
 /* ── Lógica del flujo ────────────────────────────────────────── */
+// Devuelve { reply, commit }. `commit` es una función async (o null) que
+// aplica el avance de estado y demás efectos; handleIncoming solo la ejecuta
+// tras enviar la respuesta con éxito, para que un reintento no avance dos veces.
 async function processMessage(phone, text, trigger, env) {
-  let session = await getSession(env.DB, phone);
+  const session = await getSession(env.DB, phone);
 
   // Sin sesión activa: requiere la palabra clave para arrancar
   if (!session || session.step === 0) {
-    if (text.toLowerCase().includes(trigger)) {
-      await upsertSession(env.DB, phone, { step: 1 });
-      return MSG_WELCOME;
+    if (matchesTrigger(text, trigger)) {
+      return {
+        reply: MSG_WELCOME,
+        commit: () => upsertSession(env.DB, phone, { step: 1 }),
+      };
     }
-    return MSG_FALLBACK;
+    return { reply: MSG_FALLBACK, commit: null };
   }
 
   // Sesión completada: verificar TTL para re-engagement
@@ -113,61 +230,73 @@ async function processMessage(phone, text, trigger, env) {
       ? (Date.now() - completedAt.getTime()) > ttlDays * 86400 * 1000
       : false;
 
-    if (expired && text.toLowerCase().includes(trigger)) {
-      await upsertSession(env.DB, phone, {
-        step: 1, nombre: null, cedula: null, disponibilidad: null, completed_at: null,
-      });
-      return MSG_WELCOME;
+    if (expired && matchesTrigger(text, trigger)) {
+      return {
+        reply: MSG_WELCOME,
+        commit: () => upsertSession(env.DB, phone, {
+          step: 1, nombre: null, cedula: null, disponibilidad: null, completed_at: null,
+        }),
+      };
     }
-    return MSG_ALREADY;
+    return { reply: MSG_ALREADY, commit: null };
   }
 
   // Avanzar flujo según paso actual
   if (session.step === 1) {
     const nombre = text.trim();
-    await upsertSession(env.DB, phone, { step: 2, nombre });
-    return MSG_ASK_CEDULA(nombre);
+    // No avanzar con un nombre vacío/espacios: re-preguntar sin cambiar de paso.
+    if (!nombre) return { reply: MSG_RETRY_NOMBRE, commit: null };
+    return {
+      reply: MSG_ASK_CEDULA(nombre),
+      commit: () => upsertSession(env.DB, phone, { step: 2, nombre }),
+    };
   }
 
   if (session.step === 2) {
-    await upsertSession(env.DB, phone, { step: 3, cedula: text.trim() });
-    return MSG_ASK_DISP;
+    const cedula = text.trim();
+    // Validar cédula: no vacía y con al menos algún dígito.
+    if (!cedula || !/\d/.test(cedula)) return { reply: MSG_RETRY_CEDULA, commit: null };
+    return {
+      reply: MSG_ASK_DISP,
+      commit: () => upsertSession(env.DB, phone, { step: 3, cedula }),
+    };
   }
 
   if (session.step === 3) {
     const disp = text.trim();
+    if (!disp) return { reply: MSG_RETRY_DISP, commit: null };
     const now = new Date().toISOString();
+    return {
+      reply: MSG_DONE,
+      commit: async () => {
+        await upsertSession(env.DB, phone, { step: 4, disponibilidad: disp, completed_at: now });
 
-    // Refrescar para tener nombre y cédula guardados
-    session = await getSession(env.DB, phone);
-    await upsertSession(env.DB, phone, { step: 4, disponibilidad: disp, completed_at: now });
+        // Guardar en tabla leads (visible en /api/admin)
+        try {
+          await env.DB.prepare(
+            'INSERT INTO leads (nombre, telefono, fuente) VALUES (?, ?, ?)'
+          ).bind(session.nombre || 'Bot WA', phone, 'wa_bot').run();
+        } catch (err) {
+          console.error('D1 leads insert error:', err);
+        }
 
-    // Guardar en tabla leads (visible en /api/admin)
-    try {
-      await env.DB.prepare(
-        'INSERT INTO leads (nombre, telefono, fuente) VALUES (?, ?, ?)'
-      ).bind(session.nombre || 'Bot WA', phone, 'wa_bot').run();
-    } catch (err) {
-      console.error('D1 leads insert error:', err);
-    }
-
-    // Notificación al asesor vía sendText directo (número diferente al cliente)
-    if (env.NOTIFY_WA_NUM) {
-      const resumen =
-        `🌿 *Cliente Caoba*\n` +
-        `Nombre: ${session.nombre}\n` +
-        `Cédula: ${session.cedula}\n` +
-        `Disponibilidad: ${disp}\n` +
-        `Número: ${phone}`;
-      sendTextDirect(env.NOTIFY_WA_NUM, resumen, env).catch(e =>
-        console.error('Notify send error:', e)
-      );
-    }
-
-    return MSG_DONE;
+        // Notificación al asesor vía sendText directo (número diferente al cliente)
+        if (env.NOTIFY_WA_NUM) {
+          const resumen =
+            `🌿 *Cliente Caoba*\n` +
+            `Nombre: ${session.nombre || '(no indicado)'}\n` +
+            `Cédula: ${session.cedula || '(no indicada)'}\n` +
+            `Disponibilidad: ${disp}\n` +
+            `Número: ${phone}`;
+          sendTextDirect(env.NOTIFY_WA_NUM, resumen, env).catch(e =>
+            console.error('Notify send error:', e)
+          );
+        }
+      },
+    };
   }
 
-  return null;
+  return { reply: null, commit: null };
 }
 
 /* ── D1 helpers ──────────────────────────────────────────────── */
@@ -176,39 +305,29 @@ async function getSession(db, phone) {
   return row || null;
 }
 
+// UPSERT atómico (un solo statement): evita el race read-modify-write entre
+// mensajes concurrentes del mismo número. Solo actualiza las columnas presentes
+// en `fields`; las no indicadas se preservan en la fila existente.
 async function upsertSession(db, phone, fields) {
-  const session = await getSession(db, phone);
   const now = new Date().toISOString();
+  const cols = ['step', 'nombre', 'cedula', 'disponibilidad', 'completed_at'];
+  const provided = cols.filter(c => Object.prototype.hasOwnProperty.call(fields, c));
+  const setClauses = provided.map(c => `${c}=excluded.${c}`);
+  setClauses.push('updated_at=excluded.updated_at');
 
-  if (!session) {
-    await db.prepare(
-      `INSERT INTO wa_sessions (phone, step, nombre, cedula, disponibilidad, updated_at, completed_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?)`
-    ).bind(
-      phone,
-      fields.step ?? 0,
-      fields.nombre ?? null,
-      fields.cedula ?? null,
-      fields.disponibilidad ?? null,
-      now,
-      fields.completed_at ?? null
-    ).run();
-  } else {
-    const updates = { ...session, ...fields, updated_at: now };
-    await db.prepare(
-      `UPDATE wa_sessions
-       SET step=?, nombre=?, cedula=?, disponibilidad=?, updated_at=?, completed_at=?
-       WHERE phone=?`
-    ).bind(
-      updates.step,
-      updates.nombre ?? null,
-      updates.cedula ?? null,
-      updates.disponibilidad ?? null,
-      now,
-      updates.completed_at ?? null,
-      phone
-    ).run();
-  }
+  await db.prepare(
+    `INSERT INTO wa_sessions (phone, step, nombre, cedula, disponibilidad, updated_at, completed_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?)
+     ON CONFLICT(phone) DO UPDATE SET ${setClauses.join(', ')}`
+  ).bind(
+    phone,
+    fields.step ?? 0,
+    fields.nombre ?? null,
+    fields.cedula ?? null,
+    fields.disponibilidad ?? null,
+    now,
+    fields.completed_at ?? null
+  ).run();
 }
 
 /* ── Envío directo vía API (solo para notificación al asesor) ── */
@@ -221,7 +340,11 @@ async function sendTextDirect(to, text, env) {
       headers: { 'Content-Type': 'application/json', 'apikey': env.WA_API_TOKEN },
       body: JSON.stringify({ number: to, text }),
     });
-    if (!res.ok) console.error('Evolution sendText error:', res.status, await res.text());
+    if (!res.ok) {
+      const body = await res.text();
+      console.error('Evolution sendText error:', res.status, body);
+      throw new Error(`Evolution sendText failed: ${res.status}`);
+    }
   } else if (provider === 'meta') {
     const url = `https://graph.facebook.com/v19.0/${env.WA_PHONE_ID}/messages`;
     const res = await fetch(url, {
@@ -229,7 +352,11 @@ async function sendTextDirect(to, text, env) {
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${env.WA_API_TOKEN}` },
       body: JSON.stringify({ messaging_product: 'whatsapp', to, type: 'text', text: { body: text } }),
     });
-    if (!res.ok) console.error('Meta sendText error:', res.status, await res.text());
+    if (!res.ok) {
+      const body = await res.text();
+      console.error('Meta sendText error:', res.status, body);
+      throw new Error(`Meta sendText failed: ${res.status}`);
+    }
   }
 }
 
@@ -245,7 +372,10 @@ function parseEvolution(payload) {
     if (payload.query !== undefined && payload.user !== undefined) {
       const phone = (payload.user || '').replace(/@s\.whatsapp\.net$/, '').replace(/@c\.us$/, '');
       const text = payload.query || '';
-      const messageId = payload.conversation_id || null;
+      // OJO: conversation_id es constante en toda la conversación, NO por mensaje.
+      // Usarlo como messageId haría que el dedup descarte todos los mensajes salvo
+      // el primero. Este formato no trae un ID por mensaje, así que no deduplicamos.
+      const messageId = null;
       if (!phone || !text) return null;
       return { phone, text, messageId };
     }
@@ -291,6 +421,13 @@ function parseMeta(payload) {
 }
 
 /* ── Util ────────────────────────────────────────────────────── */
+// Coincide solo si la palabra clave aparece como token completo (no subcadena),
+// para no disparar el flujo con palabras como "información" o "informe".
+function matchesTrigger(text, trigger) {
+  const tokens = (text || '').toLowerCase().split(/[^\p{L}\p{N}]+/u).filter(Boolean);
+  return tokens.includes(trigger);
+}
+
 function json(body, status = 200) {
   return new Response(JSON.stringify(body), {
     status,
