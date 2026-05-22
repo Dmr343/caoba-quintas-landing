@@ -1,0 +1,8 @@
+{
+  "name": "caoba-landing-page",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test worker/*.test.js"
+  }
+}

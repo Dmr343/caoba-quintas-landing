@@ -1,25 +1,5 @@
-/* ── Mensajes del bot ────────────────────────────────────────── */
-const MSG_WELCOME = `¡Hola! 🌿 Soy el asistente de *Caoba Quintas*.
-Para coordinar tu visita necesito algunos datos rápidos.
-¿Cuál es tu nombre completo?`;
-
-const MSG_ASK_CEDULA = nombre =>
-  `Gracias, ${nombre}. ¿Cuál es tu número de cédula?`;
-
-const MSG_ASK_DISP = `Perfecto. ¿Cuándo estarías disponible para que te llamemos?
-(Ej: lunes en la tarde, martes a cualquier hora)`;
-
-const MSG_DONE = `¡Excelente! Tu información fue recibida. ✅
-Un asesor de *Caoba Quintas* te contactará pronto. ¡Gracias!`;
-
-const MSG_ALREADY = `Tu información ya está registrada con nosotros. 😊
-Un asesor se pondrá en contacto contigo pronto.`;
-
-const MSG_FALLBACK = `No entendí tu mensaje. Si deseas información sobre Caoba Quintas, escribe *info* para comenzar.`;
-
-const MSG_RETRY_NOMBRE = `No alcancé a leer tu nombre. ¿Me lo compartes, por favor?`;
-const MSG_RETRY_CEDULA = `Necesito un número de cédula válido para continuar. ¿Me lo compartes?`;
-const MSG_RETRY_DISP = `¿Cuándo estarías disponible para que te llamemos? (Ej: lunes en la tarde)`;
+/* ── Núcleo de conversación (puro + servicio, testeable) ─────── */
+import { runEngine } from './engine.js';
 
 /* ── Router principal ────────────────────────────────────────── */
 export default {
@@ -126,177 +106,114 @@ async function handleIncoming(request, env) {
   const msg = parseIncoming(payload, env.WA_PROVIDER);
   if (!msg) return new Response('OK', { status: 200 });
 
-  const { phone, text, messageId } = msg;
-  const trigger = (env.WA_TRIGGER || 'info').toLowerCase();
-
-  // Idempotencia: reclamar el messageId antes de procesar para evitar
-  // doble procesamiento de reintentos concurrentes del proveedor.
-  if (messageId) {
-    try {
-      const result = await env.DB.prepare(
-        'INSERT OR IGNORE INTO wa_inbound (message_id, phone) VALUES (?, ?)'
-      ).bind(messageId, phone).run();
-      if (result.meta.changes === 0) return new Response('OK', { status: 200 });
-    } catch (err) {
-      console.error('Dedup error:', err);
-    }
-    // Limpieza oportunista: el dedup solo necesita cubrir los reintentos del
-    // proveedor (minutos), así que purgamos filas viejas para que la tabla no
-    // crezca sin límite. Probabilístico para no añadir costo en cada mensaje.
-    if (Math.random() < 0.02) {
-      try {
-        await env.DB.prepare(
-          "DELETE FROM wa_inbound WHERE received_at < datetime('now', '-7 days')"
-        ).run();
-      } catch (err) {
-        console.error('Dedup cleanup error:', err);
-      }
-    }
-  }
-
-  // processMessage es PURO: calcula la respuesta y deja el avance de estado
-  // pendiente en `commit`, que solo se ejecuta tras un envío exitoso. Así, si
-  // el envío falla y el proveedor reintenta, el flujo no avanza dos veces.
-  let plan;
+  // Construir adaptadores desde env e invocar el servicio de conversación.
+  // El invariante enviar→commit y el release-on-failure viven en runEngine.
+  let result;
   try {
-    plan = await processMessage(phone, text, trigger, env);
+    result = await runEngine(msg, makeDeps(env));
   } catch (err) {
-    console.error('Bot error (process):', err);
-    await releaseDedup(env.DB, messageId);
+    console.error('Bot error:', err);
     return new Response('Error', { status: 500 });
   }
 
-  const { reply, commit } = plan;
-
-  if (reply) {
-    try {
-      // Enviar respuesta vía API (patrón confirmado en cobros bot)
-      await sendTextDirect(phone, reply, env);
-    } catch (err) {
-      console.error('Bot error (send):', err);
-      // Liberar la marca para permitir el reintento del proveedor.
-      await releaseDedup(env.DB, messageId);
-      return new Response('Error', { status: 500 });
-    }
-  }
-
-  // Envío al usuario confirmado: ahora sí persistimos el avance de estado.
-  if (commit) {
-    try {
-      await commit();
-    } catch (err) {
-      console.error('Bot error (commit):', err);
-    }
-  }
-
-  // También devolver en body para EvolutionBot por si lo usa
-  if (reply) return json({ data: { message: reply } });
+  if (result.status === 'duplicate') return new Response('OK', { status: 200 });
+  if (result.status === 'send_failed') return new Response('Error', { status: 500 });
+  // También devolver en body para EvolutionBot por si lo usa.
+  if (result.reply) return json({ data: { message: result.reply } });
   return new Response('OK', { status: 200 });
 }
 
-// Libera la marca de dedup para que un reintento del proveedor pueda reprocesarse.
-async function releaseDedup(db, messageId) {
-  if (!messageId) return;
-  try {
-    await db.prepare('DELETE FROM wa_inbound WHERE message_id = ?').bind(messageId).run();
-  } catch (err) {
-    console.error('Dedup rollback error:', err);
-  }
-}
-
-/* ── Lógica del flujo ────────────────────────────────────────── */
-// Devuelve { reply, commit }. `commit` es una función async (o null) que
-// aplica el avance de estado y demás efectos; handleIncoming solo la ejecuta
-// tras enviar la respuesta con éxito, para que un reintento no avance dos veces.
-async function processMessage(phone, text, trigger, env) {
-  const session = await getSession(env.DB, phone);
-
-  // Sin sesión activa: requiere la palabra clave para arrancar
-  if (!session || session.step === 0) {
-    if (matchesTrigger(text, trigger)) {
-      return {
-        reply: MSG_WELCOME,
-        commit: () => upsertSession(env.DB, phone, { step: 1 }),
-      };
-    }
-    return { reply: MSG_FALLBACK, commit: null };
-  }
-
-  // Sesión completada: verificar TTL para re-engagement
-  if (session.step === 4) {
-    const ttlDays = parseInt(env.SESSION_TTL_DAYS || '30', 10);
-    const completedAt = session.completed_at ? new Date(session.completed_at) : null;
-    const expired = completedAt
-      ? (Date.now() - completedAt.getTime()) > ttlDays * 86400 * 1000
-      : false;
-
-    if (expired && matchesTrigger(text, trigger)) {
-      return {
-        reply: MSG_WELCOME,
-        commit: () => upsertSession(env.DB, phone, {
-          step: 1, nombre: null, cedula: null, disponibilidad: null, completed_at: null,
-        }),
-      };
-    }
-    return { reply: MSG_ALREADY, commit: null };
-  }
-
-  // Avanzar flujo según paso actual
-  if (session.step === 1) {
-    const nombre = text.trim();
-    // No avanzar con un nombre vacío/espacios: re-preguntar sin cambiar de paso.
-    if (!nombre) return { reply: MSG_RETRY_NOMBRE, commit: null };
-    return {
-      reply: MSG_ASK_CEDULA(nombre),
-      commit: () => upsertSession(env.DB, phone, { step: 2, nombre }),
-    };
-  }
-
-  if (session.step === 2) {
-    const cedula = text.trim();
-    // Validar cédula: no vacía y con al menos algún dígito.
-    if (!cedula || !/\d/.test(cedula)) return { reply: MSG_RETRY_CEDULA, commit: null };
-    return {
-      reply: MSG_ASK_DISP,
-      commit: () => upsertSession(env.DB, phone, { step: 3, cedula }),
-    };
-  }
-
-  if (session.step === 3) {
-    const disp = text.trim();
-    if (!disp) return { reply: MSG_RETRY_DISP, commit: null };
-    const now = new Date().toISOString();
-    return {
-      reply: MSG_DONE,
-      commit: async () => {
-        await upsertSession(env.DB, phone, { step: 4, disponibilidad: disp, completed_at: now });
-
-        // Guardar en tabla leads (visible en /api/admin)
+/* ── Adaptadores: conectan los puertos del motor con D1 y WhatsApp ─── */
+function makeDeps(env) {
+  const db = env.DB;
+  return {
+    config: {
+      trigger: (env.WA_TRIGGER || 'info').toLowerCase(),
+      ttlMs: parseInt(env.SESSION_TTL_DAYS || '30', 10) * 86400 * 1000,
+    },
+    clock: { now: () => Date.now() },
+    sessions: {
+      get: async phone => {
+        const row = await getSession(db, phone);
+        if (!row) return null;
+        return {
+          step: row.step,
+          nombre: row.nombre,
+          cedula: row.cedula,
+          disponibilidad: row.disponibilidad,
+          // El motor razona el TTL en epoch ms; la columna guarda ISO.
+          completedAt: row.completed_at ? Date.parse(row.completed_at) : null,
+        };
+      },
+    },
+    sender: { send: (to, text) => sendTextDirect(to, text, env) },
+    dedup: {
+      claim: async (messageId, phone) => {
+        let claimed = true;
         try {
-          await env.DB.prepare(
+          const res = await db.prepare(
+            'INSERT OR IGNORE INTO wa_inbound (message_id, phone) VALUES (?, ?)'
+          ).bind(messageId, phone).run();
+          claimed = res.meta.changes !== 0;
+        } catch (err) {
+          console.error('Dedup error:', err);
+        }
+        // Limpieza oportunista de filas viejas (la tabla no crece sin límite).
+        if (Math.random() < 0.02) {
+          try {
+            await db.prepare(
+              "DELETE FROM wa_inbound WHERE received_at < datetime('now', '-7 days')"
+            ).run();
+          } catch (err) {
+            console.error('Dedup cleanup error:', err);
+          }
+        }
+        return claimed;
+      },
+      release: async messageId => {
+        if (!messageId) return;
+        try {
+          await db.prepare('DELETE FROM wa_inbound WHERE message_id = ?').bind(messageId).run();
+        } catch (err) {
+          console.error('Dedup rollback error:', err);
+        }
+      },
+    },
+    applyEffect: async (effect, phone) => {
+      if (effect.type === 'saveSession') {
+        await upsertSession(db, phone, patchToColumns(effect.patch));
+      } else if (effect.type === 'insertLead') {
+        try {
+          await db.prepare(
             'INSERT INTO leads (nombre, telefono, fuente) VALUES (?, ?, ?)'
-          ).bind(session.nombre || 'Bot WA', phone, 'wa_bot').run();
+          ).bind(effect.lead.nombre, effect.lead.phone, effect.lead.fuente).run();
         } catch (err) {
           console.error('D1 leads insert error:', err);
         }
-
-        // Notificación al asesor vía sendText directo (número diferente al cliente)
+      } else if (effect.type === 'notifyAdvisor') {
+        // Notificación al asesor: número distinto al cliente, best-effort.
         if (env.NOTIFY_WA_NUM) {
-          const resumen =
-            `🌿 *Cliente Caoba*\n` +
-            `Nombre: ${session.nombre || '(no indicado)'}\n` +
-            `Cédula: ${session.cedula || '(no indicada)'}\n` +
-            `Disponibilidad: ${disp}\n` +
-            `Número: ${phone}`;
-          sendTextDirect(env.NOTIFY_WA_NUM, resumen, env).catch(e =>
+          sendTextDirect(env.NOTIFY_WA_NUM, effect.summary, env).catch(e =>
             console.error('Notify send error:', e)
           );
         }
-      },
-    };
-  }
+      }
+    },
+  };
+}
 
-  return { reply: null, commit: null };
+// Mapea el patch del motor (completedAt en epoch ms) a columnas de wa_sessions
+// (completed_at en ISO), preservando qué columnas están presentes.
+function patchToColumns(patch) {
+  const cols = {};
+  if ('step' in patch) cols.step = patch.step;
+  if ('nombre' in patch) cols.nombre = patch.nombre;
+  if ('cedula' in patch) cols.cedula = patch.cedula;
+  if ('disponibilidad' in patch) cols.disponibilidad = patch.disponibilidad;
+  if ('completedAt' in patch) {
+    cols.completed_at = patch.completedAt == null ? null : new Date(patch.completedAt).toISOString();
+  }
+  return cols;
 }
 
 /* ── D1 helpers ──────────────────────────────────────────────── */
@@ -421,13 +338,6 @@ function parseMeta(payload) {
 }
 
 /* ── Util ────────────────────────────────────────────────────── */
-// Coincide solo si la palabra clave aparece como token completo (no subcadena),
-// para no disparar el flujo con palabras como "información" o "informe".
-function matchesTrigger(text, trigger) {
-  const tokens = (text || '').toLowerCase().split(/[^\p{L}\p{N}]+/u).filter(Boolean);
-  return tokens.includes(trigger);
-}
-
 function json(body, status = 200) {
   return new Response(JSON.stringify(body), {
     status,
