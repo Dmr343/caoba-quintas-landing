@@ -1,6 +1,22 @@
 # Bitácora — caoba_landing_page
 
 
+Aquí está la entrada de bitácora:
+
+## 2026-05-22 | 10:06
+
+**Resumen:** Se refactorizó el bot de WhatsApp para separar la lógica de conversación en un módulo puro y reutilizable, cerrando el RFC #13.
+
+**Cambios:**
+- Se extrajo `ConversationEngine` como módulo puro (sin dependencias externas) que decide las respuestas del bot.
+- Se creó el servicio `runEngine` como capa que conecta el motor con el resto del sistema.
+- Se implementó con desarrollo guiado por pruebas: 15 tests automáticos en verde.
+- Previamente se corrigieron los 8 hallazgos de la revisión de código del bot.
+
+**Archivos clave:** `ConversationEngine`, `runEngine`
+
+---
+
 ## 2026-05-22 | 01:34
 
 **Resumen:** Se rediseñó la arquitectura del bot de WhatsApp (RFC #13) y se extrajo su lógica a un núcleo puro y testeado con TDD.
