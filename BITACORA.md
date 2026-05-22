@@ -1,6 +1,12 @@
 # Bitácora — caoba_landing_page
 
 
+## 2026-05-22 | 00:48
+
+**Resumen:** Revisión de código del bot de WhatsApp (Worker `bot.js`) que identificó 7 hallazgos, descartando como falsos positivos los supuestos "espacios faltantes" en JSX y el cambio intencional a mensaje genérico de WhatsApp.
+
+---
+
 ## 2026-05-15 | 11:37
 
 **Resumen:** Sesión de planificación para reorganizar `~/Documents`, agrupando los proyectos de Grupo Pujol (incluido `caoba_landing_page`) bajo una carpeta común `work/grupo_pujol/`.
