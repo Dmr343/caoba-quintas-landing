@@ -1,0 +1,29 @@
+name: Deploy a Cloudflare Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      # Caoba se sirve como sitio estático. Se publica SOLO el contenido público
+      # (index + páginas legales + imágenes); nunca worker/, migrations/ ni credenciales.
+      - name: Preparar directorio público
+        run: |
+          mkdir -p _site
+          cp index.html privacidad.html terminos.html _site/
+          cp -r images _site/
+
+      - name: Desplegar a Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy _site --project-name caoba-quintas --branch main --commit-dirty=true
