@@ -3,8 +3,52 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Caoba Quintas — Lotes en Costa Rica</title>
-<meta name="description" content="Lotes listos para construir en Costa Rica. Financiamiento directo. Visitas guiadas todos los días. Desde ₡19 millones.">
+<title>Caoba Quintas — Lotes en Bagaces, Guanacaste, Costa Rica</title>
+<meta name="description" content="Lotes listos para construir en Bagaces, Guanacaste. Financiamiento directo hasta 360 meses, sin prima ni fiador. Visitas guiadas todos los días. Escritura pública, agua y luz.">
+<link rel="canonical" href="https://caobaquintas.com/">
+<meta name="theme-color" content="#2D4A3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%236B3D28'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='18' font-weight='bold' fill='%23F5EFE6' text-anchor='middle'%3ECQ%3C/text%3E%3C/svg%3E">
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Caoba Quintas — Lotes en Bagaces, Guanacaste, Costa Rica">
+<meta property="og:description" content="Lotes listos para construir en Bagaces, Guanacaste. Financiamiento directo hasta 360 meses, sin prima ni fiador. Visitas guiadas todos los días.">
+<meta property="og:url" content="https://caobaquintas.com/">
+<meta property="og:image" content="https://caobaquintas.com/images/drone-panoramica.jpg">
+<meta property="og:locale" content="es_CR">
+<meta property="og:site_name" content="Caoba Quintas">
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Caoba Quintas — Lotes en Bagaces, Guanacaste, Costa Rica">
+<meta name="twitter:description" content="Lotes listos para construir en Bagaces, Guanacaste. Financiamiento directo. Visitas guiadas todos los días.">
+<meta name="twitter:image" content="https://caobaquintas.com/images/drone-panoramica.jpg">
+<!-- JSON-LD -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "RealEstateAgent",
+  "name": "Caoba Quintas",
+  "description": "Desarrollo y venta de lotes en Bagaces, Guanacaste, Costa Rica. Financiamiento directo, escritura pública, agua y luz.",
+  "url": "https://caobaquintas.com/",
+  "image": "https://caobaquintas.com/images/drone-panoramica.jpg",
+  "telephone": "+50661541764",
+  "email": "info@caobaquintas.com",
+  "areaServed": {
+    "@type": "Place",
+    "name": "Bagaces, Guanacaste, Costa Rica"
+  },
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Bagaces",
+    "addressRegion": "Guanacaste",
+    "addressCountry": "CR"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 10.507446,
+    "longitude": -85.258844
+  }
+}
+</script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,7 +62,8 @@
 :root {
   --caoba-900:#3D2418; --caoba-700:#6B3D28; --caoba-500:#8B5A3C;
   --verde-bosque:#2D4A3E; --crema-arena:#F5EFE6; --blanco:#FFFFFF;
-  --gris:#6B6B6B; --cta:#E87D3E; --cta-h:#C96428; --exito:#2F7D4F;
+  --gris:#5A5A5A; --cta:#B84A12; --cta-h:#933A0D; --cta-accent:#E87D3E; --exito:#2F7D4F;
+  --wa:#25D366; --wa-text:#0E7A5F; --wa-text-dark:#075E54; --gold:#D4A017; --gold-text:#8A6D0B;
   --font-d:'Playfair Display',Georgia,serif; --font-b:'Manrope',system-ui,sans-serif;
   --r:10px;
   --sh-sm:0 1px 4px rgba(61,36,24,.08); --sh-md:0 4px 18px rgba(61,36,24,.12); --sh-lg:0 8px 32px rgba(61,36,24,.18);
@@ -37,11 +82,19 @@ body{background-color:var(--crema-arena);background-image:url("data:image/svg+xm
 .arr{display:inline-block;transition:transform .18s}
 .btn-s{background:transparent;color:var(--caoba-700);font-family:var(--font-b);font-weight:600;font-size:14px;padding:0 20px;height:44px;border:1.5px solid var(--caoba-700);border-radius:var(--r);cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:background .15s,color .15s;text-decoration:none}
 .btn-s:hover{background:var(--caoba-700);color:#fff}
-.btn-wa{background:#25D366;color:#fff;font-family:var(--font-b);font-weight:600;font-size:14px;padding:0 20px;height:44px;border:none;border-radius:var(--r);cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:background .15s,transform .15s;text-decoration:none}
-.btn-wa:hover{background:#1da851;transform:translateY(-1px)}
+.btn-wa{background:var(--wa-text);color:#fff;font-family:var(--font-b);font-weight:600;font-size:14px;padding:0 20px;height:44px;border:none;border-radius:var(--r);cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:background .15s,transform .15s;text-decoration:none}
+.btn-wa:hover{background:var(--wa-text-dark);transform:translateY(-1px)}
 
 /* Focus */
 :focus-visible{outline:2px solid var(--cta);outline-offset:3px}
+
+/* Hover/focus interactions (moved from inline JS for keyboard a11y) */
+.nav-link{color:var(--caoba-700);transition:color .15s}
+.nav-link:hover,.nav-link:focus-visible{color:var(--caoba-900)}
+.fav-btn{transition:transform .15s}
+.fav-btn:hover,.fav-btn:focus-visible{transform:scale(1.12)}
+.foot-link{color:rgba(245,239,230,.65);transition:color .15s}
+.foot-link:hover,.foot-link:focus-visible{color:var(--crema-arena)}
 
 /* Animations */
 .fade-in{opacity:0;transform:translateY(20px);transition:opacity .4s ease-out,transform .4s ease-out}
@@ -129,12 +182,14 @@ section{padding:80px 0}
 /* Link terciario */
 a.link-t{color:var(--caoba-700);font-weight:600;font-size:13px;text-decoration:none;display:inline-flex;align-items:center;gap:4px}
 a.link-t:hover{text-decoration:underline}
-a.link-wa{color:#25D366;font-weight:600;text-decoration:none}
+a.link-wa{color:var(--wa-text);font-weight:600;text-decoration:none}
 a.link-wa:hover{text-decoration:underline}
 
 /* Grid responsivo */
 .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
 .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.grid-bnf{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+@media(max-width:600px){.grid-bnf{grid-template-columns:1fr}}
 .grid-60-40{display:grid;grid-template-columns:3fr 2fr;gap:48px;align-items:center}
 .grid-50{display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:center}
 @media(max-width:960px){.grid-3{grid-template-columns:1fr 1fr}.grid-60-40{grid-template-columns:1fr;gap:32px}.grid-50{grid-template-columns:1fr}}
@@ -647,6 +702,25 @@ const LOTS = [
   { id:11, name:"Lote 39", price:"Consultar precio", size:"5.000 m²", tag:"Disponible", zone:"Sector Central", features:["Agua y luz","Boulevard interno","Amplio y plano"],                 bg:"#4a6545" },
 ];
 
+/* ── FILTRO DE LOTES ─────────────────────────────────────────── */
+// Zonas reales del proyecto y buckets de tamaño derivados de los datos
+// reales (3.589 – 9.414 m²; usan "." como separador de miles).
+const ZONE_OPTS = ['Sector Norte','Sector Sur','Sector Central'];
+const SIZE_OPTS = ['Hasta 5.000 m²','5.000–7.000 m²','Más de 7.000 m²'];
+// Convierte "5.155 m²" → 5155
+const sizeToNum = (s) => parseInt(String(s).replace(/[^\d]/g,''), 10) || 0;
+const matchesSizeBucket = (lot, bucket) => {
+  const n = sizeToNum(lot.size);
+  if (bucket === 'Hasta 5.000 m²')   return n <= 5000;
+  if (bucket === '5.000–7.000 m²')   return n > 5000 && n <= 7000;
+  if (bucket === 'Más de 7.000 m²')  return n > 7000;
+  return true;
+};
+const filterLots = (lots, filter) => lots.filter(l =>
+  (!filter.zone || l.zone === filter.zone) &&
+  (!filter.size || matchesSizeBucket(l, filter.size))
+);
+
 const FAQS = [
   { q:"¿Cómo es el proceso de compra?",    a:"El proceso es sencillo: elegís el lote, separás con un depósito, firmamos promesa de compraventa y escrituramos ante notario. Todo en 30–60 días. Te acompañamos en cada paso.", wa:"Contame más sobre el proceso de compra" },
   { q:"¿Ofrecen financiamiento directo?",  a:"Sí. Financiamiento directo: hasta 360 meses plazo, sin prima ni fiador.", wa:"Quiero saber sobre el financiamiento" },
@@ -711,18 +785,28 @@ const Field = ({id, label, type="text", value, onChange, error, placeholder}) =>
 /* ── HERO CAROUSEL ──────────────────────────────────────────── */
 const HeroCarousel = () => {
   const [active, setActive] = useState(0);
+  const [paused, setPaused] = useState(false);
   const slides = [
     {label:"Guanacaste, Bagaces — vista aérea del proyecto", img:"images/drone-panoramica.jpg"},
     {label:"Entorno natural con montañas al fondo",          img:"images/drone-entorno.jpg"},
     {label:"Desarrollo con calles internas adoquinadas",     img:"images/drone-desarrollo.jpg"},
     {label:"Acceso vehicular y lotificación",                img:"images/drone-acceso.jpg"},
   ];
-  useEffect(()=>{const t=setInterval(()=>setActive(a=>(a+1)%slides.length),5000);return()=>clearInterval(t)},[]);
+  useEffect(()=>{
+    // Respect reduced-motion: do not auto-advance
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (paused) return;
+    const t=setInterval(()=>setActive(a=>(a+1)%slides.length),5000);
+    return()=>clearInterval(t);
+  },[paused]);
   return (
-    <div className="hero-carousel" style={{borderRadius:16,overflow:'hidden',position:'relative',aspectRatio:'4/3',boxShadow:'var(--sh-lg)'}}>
+    <div className="hero-carousel"
+      onMouseEnter={()=>setPaused(true)} onMouseLeave={()=>setPaused(false)}
+      onFocusCapture={()=>setPaused(true)} onBlurCapture={()=>setPaused(false)}
+      style={{borderRadius:16,overflow:'hidden',position:'relative',aspectRatio:'4/3',boxShadow:'var(--sh-lg)'}}>
       {slides.map((s,i)=>(
         <div key={i} style={{position:'absolute',inset:0,opacity:i===active?1:0,transition:'opacity 1.2s ease'}}>
-          <img src={s.img} alt={s.label} style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
+          <img src={s.img} alt={s.label} decoding="async" width="800" height="600" style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
           <div style={{position:'absolute',inset:0,background:'linear-gradient(to top,rgba(45,74,62,.55) 0%,transparent 55%)'}}/>
           <span style={{position:'absolute',bottom:68,left:14,color:'rgba(255,255,255,.80)',fontSize:11,fontFamily:'var(--font-b)',letterSpacing:'.06em',textShadow:'0 1px 3px rgba(0,0,0,.4)'}}>{s.label}</span>
         </div>
@@ -775,10 +859,8 @@ const Navbar = () => {
         {/* Desktop nav — max 4 items (Hick's Law) */}
         <nav className="desk-nav" style={{display:'flex',alignItems:'center',gap:32}} aria-label="Principal">
           {navLinks.map(item=>(
-            <a key={item} href={`#${item.toLowerCase().replace('ó','o')}`}
-              style={{fontFamily:'var(--font-b)',fontWeight:500,fontSize:14,color:'var(--caoba-700)',textDecoration:'none',transition:'color .15s'}}
-              onMouseEnter={e=>e.currentTarget.style.color='var(--caoba-900)'}
-              onMouseLeave={e=>e.currentTarget.style.color='var(--caoba-700)'}
+            <a key={item} href={`#${item.toLowerCase().replace('ó','o')}`} className="nav-link"
+              style={{fontFamily:'var(--font-b)',fontWeight:500,fontSize:14,textDecoration:'none'}}
             >{item}</a>
           ))}
         </nav>
@@ -915,41 +997,40 @@ const Hero = () => {
 };
 
 /* ── FILTER BAR ─────────────────────────────────────────────── */
-const FilterBar = () => {
+const FilterBar = ({filter, setFilter}) => {
   const [sheetOpen, setSheetOpen] = useState(false);
-  const [loc, setLoc] = useState('');
-  const [price, setPrice] = useState('');
-  const [size, setSize] = useState('');
+  const loc = filter.zone, size = filter.size;
+  const setLoc  = (v) => setFilter(f => ({...f, zone:v}));
+  const setSize = (v) => setFilter(f => ({...f, size:v}));
+  const goToLotes = () => document.getElementById('lotes')?.scrollIntoView({behavior:'smooth'});
   const sel = {height:44,borderRadius:'var(--r)',border:'1.5px solid rgba(61,36,24,.15)',padding:'0 12px',fontFamily:'var(--font-b)',fontSize:14,background:'var(--blanco)',color:'var(--caoba-900)',cursor:'pointer'};
 
   return (
     <>
     <div style={{background:'var(--blanco)',borderTop:'1px solid rgba(61,36,24,.07)',borderBottom:'1px solid rgba(61,36,24,.07)',boxShadow:'var(--sh-sm)'}}>
       <div className="container" style={{display:'flex',gap:10,alignItems:'center',padding:'14px 24px',flexWrap:'wrap'}}>
-        {/* Desktop filters — máx 3 (Hick's Law) */}
+        {/* Desktop filters — zona + tamaño (datos reales) */}
         <div className="desk-filters" style={{display:'flex',gap:10,flex:1,flexWrap:'wrap'}}>
-          <select value={loc} onChange={e=>setLoc(e.target.value)} style={sel} aria-label="Filtrar por ubicación">
-            <option value="">Ubicación ▾</option>
-            <option>Sector Norte</option><option>Sector Sur</option><option>Sector Este</option>
-          </select>
-          <select value={price} onChange={e=>setPrice(e.target.value)} style={sel} aria-label="Filtrar por precio">
-            <option value="">Precio ▾</option>
-            <option>Hasta ₡20M</option><option>₡20M – ₡30M</option><option>Más de ₡30M</option>
+          <select value={loc} onChange={e=>setLoc(e.target.value)} style={sel} aria-label="Filtrar por sector">
+            <option value="">Sector</option>
+            {ZONE_OPTS.map(o=><option key={o} value={o}>{o}</option>)}
           </select>
           <select value={size} onChange={e=>setSize(e.target.value)} style={sel} aria-label="Filtrar por tamaño">
-            <option value="">Tamaño ▾</option>
-            <option>Menos de 700 m²</option><option>700–1000 m²</option><option>Más de 1000 m²</option>
+            <option value="">Tamaño</option>
+            {SIZE_OPTS.map(o=><option key={o} value={o}>{o}</option>)}
           </select>
         </div>
-        <button className="btn-p" style={{height:44,fontSize:14}} onClick={()=>document.getElementById('lotes')?.scrollIntoView()}>
+        <button className="btn-p" style={{height:44,fontSize:14}} onClick={goToLotes}>
           <Ic.Search/> Buscar lotes <span className="arr">→</span>
         </button>
         <button className="mob-filter-btn" style={{display:'none',height:44,background:'none',border:'1.5px solid rgba(61,36,24,.15)',borderRadius:'var(--r)',padding:'0 16px',fontFamily:'var(--font-b)',fontSize:14,color:'var(--caoba-700)',cursor:'pointer',alignItems:'center',gap:6}} onClick={()=>setSheetOpen(true)}>
           <Ic.Filter/> Filtrar
         </button>
-        <button style={{background:'none',border:'none',fontSize:12,color:'var(--gris)',cursor:'pointer',textDecoration:'underline',padding:'0 4px',whiteSpace:'nowrap'}}>
-          Filtros avanzados
-        </button>
+        {(loc || size) && (
+          <button onClick={()=>setFilter({zone:'',size:''})} style={{background:'none',border:'none',fontSize:12,color:'var(--gris)',cursor:'pointer',textDecoration:'underline',padding:'0 4px',whiteSpace:'nowrap'}}>
+            Limpiar filtros
+          </button>
+        )}
       </div>
     </div>
 
@@ -959,9 +1040,8 @@ const FilterBar = () => {
       <div className="filter-sheet-panel">
         <div style={{width:40,height:4,background:'rgba(61,36,24,.15)',borderRadius:2,margin:'12px auto 20px'}}/>
         <h3 style={{fontFamily:'var(--font-d)',fontSize:20,fontWeight:700,color:'var(--caoba-900)',marginBottom:20}}>Filtrar lotes</h3>
-        {[['Ubicación',['Sector Norte','Sector Sur','Sector Este'],loc,setLoc],
-          ['Precio',['Hasta ₡20M','₡20M – ₡30M','Más de ₡30M'],price,setPrice],
-          ['Tamaño',['Menos de 700 m²','700–1000 m²','Más de 1000 m²'],size,setSize]
+        {[['Sector',ZONE_OPTS,loc,setLoc],
+          ['Tamaño',SIZE_OPTS,size,setSize]
         ].map(([label,opts,val,set])=>(
           <div key={label} style={{marginBottom:16}}>
             <div style={{fontSize:12,fontWeight:700,color:'var(--caoba-700)',marginBottom:8,letterSpacing:'.05em',textTransform:'uppercase'}}>{label}</div>
@@ -1000,8 +1080,8 @@ const Benefits = () => {
         <h2 style={{fontFamily:'var(--font-d)',fontWeight:700,fontSize:'clamp(26px,3vw,36px)',textAlign:'center',color:'var(--caoba-900)',marginBottom:48,lineHeight:1.2}}>
           Caoba Quintas, diferente por diseño
         </h2>
-        {/* 3 columnas — Regla del 3 (Miller, 1956) */}
-        <div className="grid-3">
+        {/* 2×2 — cuatro beneficios, sin fila huérfana */}
+        <div className="grid-bnf">
           {items.map((it,i)=>(
             <div key={i} className="fade-in" style={{padding:'30px 26px',borderRadius:14,border:'1.5px solid rgba(61,36,24,.09)',background:'var(--crema-arena)',textAlign:'center'}}>
               <div style={{color:'var(--verde-bosque)',marginBottom:14,display:'flex',justifyContent:'center'}}>{it.icon}</div>
@@ -1052,18 +1132,16 @@ const LotCard = ({lot}) => {
     <div className="lot-card">
       {/* Imagen — foto de drone + overlay de color de marca */}
       <div style={{position:'relative',aspectRatio:'4/3',overflow:'hidden',background:lot.bg}}>
-        <img src={photo} alt={`Vista ${lot.name}`} style={{position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
+        <img src={photo} alt={`Vista ${lot.name}`} loading="lazy" decoding="async" width="400" height="300" style={{position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
         <div style={{position:'absolute',inset:0,background:lot.bg,opacity:0.42}}/>
 
         {/* Badge disponibilidad — esquina sup-izq (Gestalt proximidad) */}
-        <div style={{position:'absolute',top:10,left:10,background:lot.tag==='Disponible'?'var(--exito)':'#D4A017',color:'white',fontSize:11,fontWeight:700,padding:'3px 10px',borderRadius:20,letterSpacing:'.05em'}}>
+        <div style={{position:'absolute',top:10,left:10,background:lot.tag==='Disponible'?'var(--exito)':'var(--gold-text)',color:'white',fontSize:11,fontWeight:700,padding:'3px 10px',borderRadius:20,letterSpacing:'.05em'}}>
           {lot.tag}
         </div>
         {/* Favorito — microcompromiso Cialdini. Color: caoba-700, NO cta-primario (Von Restorff) */}
-        <button onClick={()=>setFav(f=>!f)} aria-label={fav?'Quitar favorito':'Agregar a favoritos'}
-          style={{position:'absolute',top:8,right:8,background:'rgba(255,255,255,.92)',border:'none',borderRadius:'50%',width:34,height:34,display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',transition:'transform .15s'}}
-          onMouseEnter={e=>e.currentTarget.style.transform='scale(1.12)'}
-          onMouseLeave={e=>e.currentTarget.style.transform='scale(1)'}
+        <button onClick={()=>setFav(f=>!f)} aria-label={fav?'Quitar favorito':'Agregar a favoritos'} className="fav-btn"
+          style={{position:'absolute',top:8,right:8,background:'rgba(255,255,255,.92)',border:'none',borderRadius:'50%',width:34,height:34,display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer'}}
         ><Ic.Heart filled={fav}/></button>
       </div>
       {/* Jerarquía: precio > ubicación > specs */}
@@ -1088,12 +1166,16 @@ const LotCard = ({lot}) => {
 };
 
 /* ── LOTS SECTION ───────────────────────────────────────────── */
-const LotsSection = () => {
+const LotsSection = ({filter={zone:'',size:''}}) => {
   const [loading, setLoading] = useState(true);
   const [shown, setShown] = useState(3);
-  const avail = LOTS.filter(l=>l.tag==='Disponible').length;
+  const filtered = filterLots(LOTS, filter);
+  const avail = filtered.filter(l=>l.tag==='Disponible').length;
+  const isFiltered = !!(filter.zone || filter.size);
 
   useEffect(()=>{const t=setTimeout(()=>setLoading(false),900);return()=>clearTimeout(t)},[]);
+  // Al cambiar el filtro, reinicia la paginación
+  useEffect(()=>{setShown(3)},[filter.zone, filter.size]);
 
   return (
     <section id="lotes">
@@ -1103,23 +1185,30 @@ const LotsSection = () => {
           <h2 style={{fontFamily:'var(--font-d)',fontWeight:700,fontSize:'clamp(26px,3vw,36px)',color:'var(--caoba-900)',lineHeight:1.2}}>
             Encontrá tu terreno ideal
           </h2>
-          {/* Escasez — Cialdini: dato real visible */}
-          <span style={{fontSize:14,color:'var(--gris)',background:'rgba(47,125,79,.08)',border:'1px solid rgba(47,125,79,.2)',borderRadius:20,padding:'4px 12px',fontWeight:600,color:'var(--exito)'}}>
-            {avail} lotes disponibles
+          {/* Escasez — Cialdini: dato real visible (refleja el filtro activo) */}
+          <span style={{fontSize:14,background:'rgba(47,125,79,.08)',border:'1px solid rgba(47,125,79,.2)',borderRadius:20,padding:'4px 12px',fontWeight:600,color:'var(--exito)'}}>
+            {avail} {avail===1?'lote':'lotes'} {isFiltered?'según tu filtro':'disponibles'}
           </span>
         </div>
         {/* Skeletons mientras carga (spec sec 7) */}
         <div className="grid-3">
           {loading
             ? [1,2,3].map(i=><LotSkeleton key={i}/>)
-            : LOTS.slice(0,shown).map(lot=><LotCard key={lot.id} lot={lot}/>)
+            : filtered.slice(0,shown).map(lot=><LotCard key={lot.id} lot={lot}/>)
           }
         </div>
+        {/* Estado vacío cuando el filtro no arroja resultados */}
+        {!loading && filtered.length === 0 && (
+          <div style={{textAlign:'center',padding:'32px 0',color:'var(--gris)'}}>
+            <p style={{fontSize:15,marginBottom:8}}>No hay lotes que coincidan con tu búsqueda.</p>
+            <p style={{fontSize:13}}>Probá con otro sector o tamaño.</p>
+          </div>
+        )}
         {/* "Cargar más" — NO scroll infinito (spec sec 5.5) */}
-        {!loading && shown < LOTS.length && (
+        {!loading && shown < filtered.length && (
           <div style={{textAlign:'center',marginTop:36}}>
-            <button className="btn-s" style={{height:48,fontSize:14}} onClick={()=>setShown(s=>Math.min(s+3,LOTS.length))}>
-              Ver más lotes ({LOTS.length-shown} restantes) <span className="arr">→</span>
+            <button className="btn-s" style={{height:48,fontSize:14}} onClick={()=>setShown(s=>Math.min(s+3,filtered.length))}>
+              Ver más lotes ({filtered.length-shown} restantes) <span className="arr">→</span>
             </button>
           </div>
         )}
@@ -1149,9 +1238,11 @@ const LeafletMap = () => {
     });
     mapInstanceRef.current = map;
 
-    // Activate scroll zoom on click
+    // Activate scroll zoom on click; re-disable when the pointer leaves the map
+    // so wheel events don't keep hijacking page scroll.
     map.on('click', () => map.scrollWheelZoom.enable());
-    map.on('blur', () => map.scrollWheelZoom.disable());
+    map.getContainer().addEventListener('mouseleave', () => map.scrollWheelZoom.disable());
+    map.getContainer().addEventListener('mouseout', () => map.scrollWheelZoom.disable());
 
     // Esri satellite tiles — free, no API key
     L.tileLayer(
@@ -1202,9 +1293,9 @@ const LeafletMap = () => {
                 `<div style="font-size:16px;font-weight:700;color:#3D2418;margin-bottom:2px">${lot.name}</div>` +
                 `<div style="font-size:14px;color:#6B3D28;font-weight:600;margin-bottom:2px">${lot.size}</div>` +
                 `<div style="font-size:12px;color:#6B6B6B;margin-bottom:6px">${lot.zone}</div>` +
-                `<div style="font-size:15px;font-weight:700;color:#E87D3E;margin-bottom:12px">${lot.price}</div>` +
+                `<div style="font-size:15px;font-weight:700;color:#B84A12;margin-bottom:12px">${lot.price}</div>` +
                 `<a href="https://wa.me/50661541764?text=Hola%2C%20me%20interesa%20informaci%C3%B3n%20sobre%20Caoba%20Quintas"` +
-                `style="display:block;background:#25D366;color:white;padding:8px 14px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:700;text-align:center">` +
+                `style="display:block;background:#0E7A5F;color:white;padding:8px 14px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:700;text-align:center">` +
                 `WhatsApp →</a></div>`
               ).openPopup();
             } else {
@@ -1267,7 +1358,7 @@ const LeafletMap = () => {
 };
 
 const LocationSection = () => (
-  <section id="ubicaci" style={{background:'var(--blanco)'}}>
+  <section id="ubicacion" style={{background:'var(--blanco)'}}>
     <div className="container">
       <div className="eyebrow" style={{marginBottom:12}}>Dónde estamos</div>
       <h2 style={{fontFamily:'var(--font-d)',fontWeight:700,fontSize:'clamp(26px,3vw,36px)',color:'var(--caoba-900)',marginBottom:40,lineHeight:1.2}}>Ubicación estratégica</h2>
@@ -1516,7 +1607,7 @@ const Footer = () => (
       <div style={{display:'grid',gridTemplateColumns:'2fr 1fr 1fr',gap:32,marginBottom:32}}>
         <div>
           <div style={{marginBottom:16}}>
-            <img src="images/logo_v2_crema.png" alt="Caoba Quintas" style={{height:56,width:'auto',display:'block'}}/>
+            <img src="images/logo_v2_crema.png" alt="Caoba Quintas" loading="lazy" decoding="async" width="180" height="56" style={{height:56,width:'auto',display:'block'}}/>
           </div>
           <p style={{fontSize:13,lineHeight:1.85,maxWidth:260}}>Desarrollo de lotes en Bagaces, Guanacaste, Costa Rica. Construí donde siempre quisiste.</p>
         </div>
@@ -1532,13 +1623,13 @@ const Footer = () => (
           <div style={{fontWeight:700,fontSize:12,color:'var(--crema-arena)',marginBottom:12,letterSpacing:'.08em',textTransform:'uppercase'}}>Legal</div>
           <div style={{fontSize:13,lineHeight:2.1}}>
             {['Política de privacidad','Términos de uso','Cookies'].map(l=>(
-              <div key={l}><a href="#" style={{color:'rgba(245,239,230,.65)',textDecoration:'none'}} onMouseEnter={e=>e.currentTarget.style.color='var(--crema-arena)'} onMouseLeave={e=>e.currentTarget.style.color='rgba(245,239,230,.65)'}>{l}</a></div>
+              <div key={l}><a href="#" className="foot-link" style={{textDecoration:'none'}}>{l}</a></div>
             ))}
           </div>
         </div>
       </div>
       <div style={{borderTop:'1px solid rgba(245,239,230,.08)',paddingTop:20,display:'flex',justifyContent:'space-between',alignItems:'center',flexWrap:'wrap',gap:10}}>
-        <div style={{fontSize:12}}>© 2024 Caoba Quintas. Todos los derechos reservados.</div>
+        <div style={{fontSize:12}}>© {new Date().getFullYear()} Caoba Quintas. Todos los derechos reservados.</div>
       </div>
     </div>
     <style>{`@media(max-width:768px){footer .container>div:first-child{grid-template-columns:1fr!important}}`}</style>
@@ -1547,7 +1638,7 @@ const Footer = () => (
 
 /* ── TWEAKS ─────────────────────────────────────────────────── */
 const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
-  "ctaColor": "#E87D3E",
+  "ctaColor": "#B84A12",
   "verdeColor": "#2D4A3E",
   "heroTitle": "Lotes listos para construir tu próximo hogar",
   "showSkeletons": true
@@ -1618,14 +1709,15 @@ const WaFloatAndBar = () => {
 /* ── APP ────────────────────────────────────────────────────── */
 const App = () => {
   useScrollReveal();
+  const [filter, setFilter] = useState({ zone:'', size:'' });
   return (
     <>
       <Navbar/>
       <main>
         <Hero/>
-        <FilterBar/>
+        <FilterBar filter={filter} setFilter={setFilter}/>
         <Benefits/>
-        <LotsSection/>
+        <LotsSection filter={filter}/>
         <LocationSection/>
         <SocialProof/>
         <FAQ/>
