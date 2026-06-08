@@ -1,6 +1,21 @@
 # Bitácora — caoba_landing_page
 
 
+## 2026-06-08 | 01:15
+
+**Qué se hizo:**
+- Reorganizó raíz: movió documentación a `docs/`, archivó legacy a `99-archivo/` usando `git mv`
+- Creó `README.md` en ambas carpetas para claridad de estructura
+- Preservó historial y aseguró que deploy (`index.html`, `images/`, etc.) no se tocó
+
+**Dónde quedamos:** 7 renames están staged, listos para commitear. Proyecto raíz más limpia: solo deploy, código, config, log y credenciales en la raíz; documentación y legacy archivado sin borrar nada.
+
+**Qué falta:**
+- Commitear los renames (esperando confirmación para rama main)
+- Opcionalmente limpiar comentario huérfano en `index.html:248`
+
+---
+
 Aquí está la entrada de bitácora:
 
 ## 2026-05-22 | 10:06
