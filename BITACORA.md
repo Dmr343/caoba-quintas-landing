@@ -3,20 +3,34 @@
 
 ## 2026-06-08 | 01:15
 
-**Qué se hizo:**
-- Reorganizó raíz: movió documentación a `docs/`, archivó legacy a `99-archivo/` usando `git mv`
-- Creó `README.md` en ambas carpetas para claridad de estructura
-- Preservó historial y aseguró que deploy (`index.html`, `images/`, etc.) no se tocó
+**Qué se hizo:** Reorganización completa de la raíz del repo siguiendo la guía de estructura de
+carpetas (`personal/guias/estructura-carpetas-guia.md`), aplicada con cuidado por ser un repo de
+código con deploy en vivo. Tres pasos, todo con `git mv` (historial preservado):
 
-**Dónde quedamos:** 7 renames están staged, listos para commitear. Proyecto raíz más limpia: solo deploy, código, config, log y credenciales en la raíz; documentación y legacy archivado sin borrar nada.
+- **Documentación → `docs/`**: `guia.md`, `caobaquintas_prompt.md`, `Manual_de_Marca_v5.html`, y
+  `caoba_lots.geojson` a `docs/datos/` (sin referencias en el sitio).
+- **Legacy/dev → `99-archivo/`**: `index-dev.html`, `tweaks-panel.jsx`, `Inventario24Feb2026.jpeg`,
+  y los pesados gitignored `Videos/` (23 fotos del dron) y `dist/` (build viejo).
+- **Sitio público → `public/`**: `index.html`, `privacidad.html`, `terminos.html`, `images/`. Las
+  rutas internas son relativas, así que nada se rompió. Se actualizó `deploy-pages.yml` para
+  desplegar directo con `pages deploy public` (se eliminó el paso de copia manual a `_site/`).
+- **Config → `config/`**: `wrangler.toml` y `wrangler.bot.toml`, con `main` corregido a
+  `../worker/...` (wrangler resuelve la ruta relativa al config). Validado con `--dry-run`: ambos
+  Workers empaquetan bien. Ahora los deploys del worker requieren `--config config/wrangler*.toml`.
+- **Credenciales → `secrets/`**: `credenciales_caoba.md` (sigue gitignored; se agregó `secrets/` al
+  `.gitignore`).
+- Se crearon `README.md` en `docs/`, `99-archivo/`, `public/` y `config/`.
+- Se actualizó el `CLAUDE.md` del workspace (`grupo_pujol/`) con los comandos de deploy nuevos.
+
+**Dónde quedamos:** Raíz mínima — solo quedan en raíz los archivos que el tooling obliga:
+`package.json` (npm), `.gitignore` (git) y `BITACORA.md` (el skill/hook `/bitacora` la espera ahí).
+Tests del worker: 15/15 verdes. Deploy del sitio (CI) sin cambios funcionales.
 
 **Qué falta:**
-- Commitear los renames (esperando confirmación para rama main)
-- Opcionalmente limpiar comentario huérfano en `index.html:248`
+- Recordar `--config config/wrangler*.toml` en todo deploy/secret/d1 del worker de ahora en adelante.
+- Opcionalmente limpiar el comentario huérfano `// tweaks-panel.jsx` en `public/index.html:248`.
 
 ---
-
-Aquí está la entrada de bitácora:
 
 ## 2026-05-22 | 10:06
 
