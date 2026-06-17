@@ -798,6 +798,24 @@ const LOTS = [{
   bg: "#2D4A3E"
 }, {
   id: 2,
+  name: "Lote 3",
+  price: "Consultar precio",
+  size: "5.828 m²",
+  tag: "Disponible",
+  zone: "Sector Sur",
+  features: ["Agua y luz", "Sector sur", "Amplio y bien ubicado"],
+  bg: "#5c3a22"
+}, {
+  id: 13,
+  name: "Lote 11",
+  price: "Consultar precio",
+  size: "5.159 m²",
+  tag: "Disponible",
+  zone: "Sector Central",
+  features: ["Agua y luz", "Acceso vial", "Entorno arborizado"],
+  bg: "#3D5C45"
+}, {
+  id: 3,
   name: "Lote 14",
   price: "Consultar precio",
   size: "3.589 m²",
@@ -806,7 +824,7 @@ const LOTS = [{
   features: ["Agua y luz", "Cerca de acceso principal", "Vista despejada"],
   bg: "#6B3D28"
 }, {
-  id: 3,
+  id: 4,
   name: "Lote 28",
   price: "Consultar precio",
   size: "5.017 m²",
@@ -815,7 +833,7 @@ const LOTS = [{
   features: ["Agua y luz", "Entorno tranquilo", "Arborizado"],
   bg: "#3D5C45"
 }, {
-  id: 4,
+  id: 5,
   name: "Lote 30",
   price: "Consultar precio",
   size: "5.155 m²",
@@ -824,7 +842,7 @@ const LOTS = [{
   features: ["Agua y luz", "Frente a boulevard interno", "Listo para construir"],
   bg: "#8B5A3C"
 }, {
-  id: 5,
+  id: 6,
   name: "Lote 31",
   price: "Consultar precio",
   size: "5.051 m²",
@@ -833,7 +851,7 @@ const LOTS = [{
   features: ["Agua y luz", "Frente a boulevard interno", "Privacidad"],
   bg: "#4a6545"
 }, {
-  id: 6,
+  id: 7,
   name: "Lote 32",
   price: "Consultar precio",
   size: "5.034 m²",
@@ -842,7 +860,7 @@ const LOTS = [{
   features: ["Agua y luz", "Frente a boulevard interno", "Acceso amplio"],
   bg: "#5c3a22"
 }, {
-  id: 7,
+  id: 8,
   name: "Lote 33",
   price: "Consultar precio",
   size: "5.018 m²",
@@ -851,7 +869,7 @@ const LOTS = [{
   features: ["Agua y luz", "Frente a boulevard interno", "Esquinero"],
   bg: "#2D4A3E"
 }, {
-  id: 8,
+  id: 9,
   name: "Lote 34",
   price: "Consultar precio",
   size: "5.082 m²",
@@ -860,7 +878,7 @@ const LOTS = [{
   features: ["Agua y luz", "Frente a boulevard interno", "Vista al entorno"],
   bg: "#6B3D28"
 }, {
-  id: 9,
+  id: 10,
   name: "Lote 35",
   price: "Consultar precio",
   size: "5.061 m²",
@@ -869,7 +887,7 @@ const LOTS = [{
   features: ["Agua y luz", "Frente a boulevard interno", "Terreno regular"],
   bg: "#3D5C45"
 }, {
-  id: 10,
+  id: 11,
   name: "Lote 36",
   price: "Consultar precio",
   size: "5.034 m²",
@@ -878,7 +896,7 @@ const LOTS = [{
   features: ["Agua y luz", "Frente a boulevard interno", "Colinda con zona verde"],
   bg: "#8B5A3C"
 }, {
-  id: 11,
+  id: 12,
   name: "Lote 39",
   price: "Consultar precio",
   size: "5.000 m²",
@@ -2954,6 +2972,8 @@ const LeafletMap = () => {
 
     // Lotes disponibles: GeoJSON feature index → nombre en LOTS
     const availableMap = {
+      68: 'Lote 3',
+      62: 'Lote 11',
       70: 'Lote 1',
       57: 'Lote 14',
       54: 'Lote 28',
