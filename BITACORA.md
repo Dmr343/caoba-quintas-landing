@@ -1,6 +1,18 @@
 # Bitácora — caoba_landing_page
 
 
+## 2026-06-16 | 18:29
+
+**Qué se hizo:**
+- Actualizó datos de disponibilidad de lotes para Junio 2026 en el sitio.
+- Commitó cambio (`4a5460b feat: actualiza disponibilidad de lotes — Junio 2026`).
+- CI ejecutó auto-deploy a Cloudflare Pages; sitio en vivo.
+
+**Dónde quedamos:** Todos los cambios commitados. Sitio en vivo con datos de lotes actualizados. Repo en estado limpio post-reorganización.
+
+**Qué falta:**
+- Pendiente menor (no crítico): limpiar comentario huérfano `// tweaks-panel.jsx` en `public/index.html:248`.
+
 ## 2026-06-16 | 18:28
 
 **Qué se hizo:**
